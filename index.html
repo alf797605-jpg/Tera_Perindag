@@ -1,0 +1,1525 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Aplikasi Tera Perindag</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+      /* Custom Styles for Mobile App feel */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f1f5f9; /* Slate 100 */
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Hide scrollbar for clean UI */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Safe area padding for mobile navigation */
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 80px);
+      }
+
+      /* Active click effect */
+      .active-scale:active {
+        transform: scale(0.97);
+      }
+
+      /* Radio button custom style */
+      input[type="radio"]:checked + div {
+        border-color: #3b82f6; /* blue-500 */
+        background-color: #eff6ff; /* blue-50 */
+      }
+      input[type="radio"]:checked + div .radio-icon {
+        color: #3b82f6;
+      }
+
+      /* Toast Animation */
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .toast-animate {
+        animation: slideUp 0.3s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body
+    class="text-slate-800 antialiased h-screen overflow-hidden flex justify-center"
+  >
+    <!-- App Container (Mobile Frame Constraint on Desktop) -->
+    <div
+      class="w-full max-w-md h-full bg-white shadow-2xl relative flex flex-col overflow-hidden"
+    >
+      <!-- ==============================
+             SCREEN: DASHBOARD (BERANDA)
+             ============================== -->
+      <div id="screen-dashboard" class="screen flex-1 overflow-y-auto pb-safe">
+        <!-- Header section -->
+        <div
+          class="bg-blue-600 rounded-b-[2rem] pt-8 pb-16 px-6 relative overflow-hidden shadow-md"
+        >
+          <div class="flex justify-between items-center relative z-10">
+            <div>
+              <h1
+                class="text-xl font-bold tracking-tight text-white leading-tight"
+                id="header-title"
+              >
+                Selamat bertugas,
+              </h1>
+              <p
+                class="text-blue-100 text-sm font-medium mt-1"
+                id="header-subtitle"
+              >
+                Dinas Perindag
+              </p>
+            </div>
+            <button
+              onclick="app.openNotifications()"
+              class="relative p-2 rounded-full bg-white/10 hover:bg-white/20 transition backdrop-blur-sm active-scale z-10"
+            >
+              <i class="ph ph-bell text-xl text-white"></i>
+              <span
+                class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-blue-600 rounded-full"
+              ></span>
+            </button>
+          </div>
+          <!-- Decorative bg circles -->
+          <div
+            class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"
+          ></div>
+          <div
+            class="absolute top-10 -left-10 w-32 h-32 bg-blue-400/20 rounded-full blur-xl"
+          ></div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="px-5 -mt-10 relative z-20 space-y-6">
+          <!-- Stats Card -->
+          <div
+            class="bg-white rounded-2xl p-5 shadow-lg shadow-slate-200/50 border border-slate-50 flex justify-between items-center"
+          >
+            <div class="text-center w-1/2 border-r border-slate-100">
+              <p
+                class="text-xs font-semibold text-slate-500 uppercase tracking-wide"
+              >
+                Ditera Bulan Ini
+              </p>
+              <p
+                class="text-3xl font-extrabold text-blue-600 mt-1"
+                id="stat-total"
+              >
+                0
+              </p>
+            </div>
+            <div class="text-center w-1/2">
+              <p
+                class="text-xs font-semibold text-slate-500 uppercase tracking-wide"
+              >
+                Penerimaan
+              </p>
+              <p
+                class="text-lg font-extrabold text-green-600 mt-1"
+                id="stat-penerimaan"
+              >
+                Rp 0
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="grid grid-cols-3 gap-3">
+            <button
+              onclick="app.switchTab('input')"
+              class="bg-blue-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active-scale transition-transform border border-blue-100"
+            >
+              <i class="ph-fill ph-plus-circle text-2xl text-blue-600"></i>
+              <span class="text-[10px] font-bold text-blue-800"
+                >Input Tera</span
+              >
+            </button>
+            <button
+              onclick="app.switchTab('data')"
+              class="bg-purple-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active-scale transition-transform border border-purple-100"
+            >
+              <i class="ph-fill ph-files text-2xl text-purple-600"></i>
+              <span class="text-[10px] font-bold text-purple-800"
+                >Data UTTP</span
+              >
+            </button>
+            <button
+              onclick="app.sendToKodular('OPEN_SETTINGS')"
+              class="bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active-scale transition-transform border border-slate-200"
+            >
+              <i class="ph-fill ph-gear text-2xl text-slate-600"></i>
+              <span class="text-[10px] font-bold text-slate-800"
+                >Pengaturan</span
+              >
+            </button>
+          </div>
+
+          <!-- Recent Activity List -->
+          <div>
+            <div class="flex justify-between items-end mb-4">
+              <h2 class="text-lg font-bold text-slate-800">
+                Aktivitas Terakhir
+              </h2>
+              <button
+                onclick="app.switchTab('data')"
+                class="text-xs font-bold text-blue-600 hover:text-blue-700"
+              >
+                Lihat Semua
+              </button>
+            </div>
+
+            <div class="space-y-3" id="recent-activity-container">
+              <!-- Items injected by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================
+             SCREEN: DATA UTTP
+             ============================== -->
+      <div
+        id="screen-data"
+        class="screen hidden flex-col h-full bg-slate-50 pb-safe"
+      >
+        <div
+          class="bg-white pt-6 pb-4 px-5 shadow-sm border-b border-slate-100 z-10 sticky top-0"
+        >
+          <h1 class="text-xl font-bold text-slate-800 mb-4">Data Pengujian</h1>
+
+          <!-- Search Bar -->
+          <div class="relative mb-4">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <i class="ph ph-magnifying-glass text-slate-400 text-lg"></i>
+            </div>
+            <input
+              type="text"
+              id="search-input"
+              class="w-full pl-10 pr-4 py-3 bg-slate-100 border-none rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm"
+              placeholder="Cari nama toko / alat..."
+            />
+          </div>
+
+          <!-- Filter Chips -->
+          <div class="flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
+            <button
+              class="filter-btn active whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white shadow-md shadow-blue-500/20"
+              data-filter="Semua"
+            >
+              Semua
+            </button>
+            <button
+              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200"
+              data-filter="Sah"
+            >
+              Hanya Sah
+            </button>
+            <button
+              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200"
+              data-filter="Batal"
+            >
+              Hanya Batal
+            </button>
+          </div>
+        </div>
+
+        <!-- Data List -->
+        <div class="flex-1 overflow-y-auto p-4">
+          <div class="space-y-3" id="data-list-container">
+            <!-- Data List Injected via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================
+             SCREEN: INPUT TERA (FORM)
+             ============================== -->
+      <div
+        id="screen-input"
+        class="screen hidden h-full flex-col bg-slate-50 pb-safe"
+      >
+        <div
+          class="bg-white pt-6 pb-4 px-5 shadow-sm border-b border-slate-100 z-10 sticky top-0"
+        >
+          <h1 class="text-xl font-bold text-slate-800">Formulir Pengujian</h1>
+          <p class="text-sm text-slate-500 mt-1">
+            Masukkan data hasil tera / tera ulang
+          </p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-5">
+          <form id="form-tera" class="space-y-6">
+            <!-- Section: Data Pemilik -->
+            <div
+              class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100"
+            >
+              <h3
+                class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"
+              >
+                <i class="ph-fill ph-user text-blue-500"></i> Informasi Pemilik
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <label
+                    class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                    >Nama Toko / Pemilik</label
+                  >
+                  <input
+                    type="text"
+                    id="input-nama"
+                    required
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    placeholder="Cth: Toko Sinar Jaya"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                    >Alamat Lokasi</label
+                  >
+                  <textarea
+                    id="input-alamat"
+                    rows="2"
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    placeholder="Alamat lengkap lokasi pengujian..."
+                  ></textarea>
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                    >Titik Koordinat GPS</label
+                  >
+                  <div class="flex gap-2">
+                    <input
+                      type="text"
+                      id="input-koordinat"
+                      class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none text-sm font-medium text-slate-700"
+                      placeholder="Belum disinkronisasi..."
+                      readonly
+                    />
+                    <button
+                      type="button"
+                      onclick="app.getLocation()"
+                      class="px-4 py-3 bg-purple-100 text-purple-700 rounded-xl hover:bg-purple-200 active-scale transition-colors flex items-center justify-center shadow-sm"
+                    >
+                      <i class="ph-bold ph-map-pin text-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section: Data Alat -->
+            <div
+              class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100"
+            >
+              <h3
+                class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"
+              >
+                <i class="ph-fill ph-scales text-purple-500"></i> Spesifikasi
+                Alat UTTP
+              </h3>
+              <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                      >Jenis UTTP</label
+                    >
+                    <select
+                      id="input-jenis"
+                      required
+                      class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none"
+                    >
+                      <option value="Timbangan Meja">Timbangan Meja</option>
+                      <option value="Timbangan Sentisimal">
+                        Timb. Sentisimal
+                      </option>
+                      <option value="Neraca Emas">Neraca Emas</option>
+                      <option value="Takaran Kering">Takaran Kering</option>
+                      <option value="Pompa Ukur BBM">Pompa Ukur BBM</option>
+                      <option value="Lainnya">Lainnya...</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                      >Kapasitas</label
+                    >
+                    <input
+                      type="text"
+                      id="input-kapasitas"
+                      class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      placeholder="Cth: 10 Kg"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                    >Biaya Retribusi (Rp)</label
+                  >
+                  <div class="relative">
+                    <div
+                      class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                    >
+                      <span class="text-slate-500 font-bold text-sm">Rp</span>
+                    </div>
+                    <input
+                      type="number"
+                      id="input-retribusi"
+                      class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-medium"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section: Hasil Pengujian -->
+            <div
+              class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100"
+            >
+              <h3
+                class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"
+              >
+                <i class="ph-fill ph-check-circle text-green-500"></i> Hasil
+                Pengujian
+              </h3>
+
+              <div class="grid grid-cols-2 gap-3">
+                <label class="relative cursor-pointer">
+                  <input
+                    type="radio"
+                    name="status-tera"
+                    value="Sah"
+                    class="peer sr-only"
+                    checked
+                  />
+                  <div
+                    class="p-4 rounded-xl border-2 border-slate-100 flex flex-col items-center justify-center gap-2 transition-all"
+                  >
+                    <i
+                      class="ph-fill ph-seal-check text-3xl text-slate-300 radio-icon"
+                    ></i>
+                    <span class="font-bold text-slate-700">SAH</span>
+                  </div>
+                </label>
+
+                <label class="relative cursor-pointer">
+                  <input
+                    type="radio"
+                    name="status-tera"
+                    value="Batal"
+                    class="peer sr-only"
+                  />
+                  <div
+                    class="p-4 rounded-xl border-2 border-slate-100 flex flex-col items-center justify-center gap-2 transition-all"
+                  >
+                    <i
+                      class="ph-fill ph-x-circle text-3xl text-slate-300 radio-icon"
+                    ></i>
+                    <span class="font-bold text-slate-700">BATAL</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-2 pb-6">
+              <button
+                type="submit"
+                class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 active-scale transition-transform flex items-center justify-center gap-2"
+              >
+                <i class="ph-bold ph-floppy-disk"></i> Simpan Data Tera
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ==============================
+             SCREEN: PROFIL (AKUN)
+             ============================== -->
+      <div
+        id="screen-profile"
+        class="screen hidden h-full flex-col bg-slate-50 pb-safe"
+      >
+        <!-- Header -->
+        <div
+          class="bg-white pt-6 pb-4 px-5 shadow-sm border-b border-slate-100 z-10 sticky top-0"
+        >
+          <h1 class="text-xl font-bold text-slate-800">Profil Petugas</h1>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-5 space-y-6">
+          <!-- ID Card style -->
+          <div
+            class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-xl shadow-blue-900/20 relative overflow-hidden"
+          >
+            <!-- Decorative element -->
+            <div
+              class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-lg"
+            ></div>
+
+            <div class="flex items-start justify-between relative z-10">
+              <div class="flex gap-4 items-center">
+                <div
+                  class="w-16 h-16 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center backdrop-blur-sm"
+                >
+                  <i class="ph-fill ph-user text-3xl"></i>
+                </div>
+                <div>
+                  <h2 class="text-xl font-bold" id="profile-name-display">
+                    Petugas Tera
+                  </h2>
+                  <p
+                    class="text-blue-200 text-sm mt-0.5"
+                    id="profile-nip-display"
+                  >
+                    NIP. 19900101 201001 1 001
+                  </p>
+                </div>
+              </div>
+              <button
+                onclick="app.openEditProfile()"
+                class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+              >
+                <i class="ph-bold ph-pencil-simple"></i>
+              </button>
+            </div>
+
+            <div
+              class="mt-8 pt-4 border-t border-white/20 flex justify-between items-center relative z-10"
+            >
+              <div>
+                <p
+                  class="text-xs text-blue-200 uppercase tracking-wide font-semibold"
+                >
+                  Jabatan
+                </p>
+                <p class="font-bold text-sm mt-0.5" id="profile-role-display">
+                  Penera Ahli Pertama
+                </p>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-xs text-blue-200 uppercase tracking-wide font-semibold"
+                >
+                  Status
+                </p>
+                <p
+                  class="font-bold text-sm mt-0.5 flex items-center gap-1 justify-end"
+                >
+                  <span class="w-2 h-2 rounded-full bg-green-400"></span> Aktif
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings / Menu List -->
+          <div
+            class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
+          >
+            <button
+              onclick="app.sendToKodular('CONNECT_PRINTER')"
+              class="w-full flex items-center justify-between p-4 border-b border-slate-100 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600"
+                >
+                  <i class="ph-fill ph-printer text-xl"></i>
+                </div>
+                <div class="text-left">
+                  <p class="font-semibold text-slate-800 text-sm">
+                    Printer Bluetooth
+                  </p>
+                  <p class="text-xs text-slate-500">
+                    Hubungkan printer thermal
+                  </p>
+                </div>
+              </div>
+              <i class="ph-bold ph-caret-right text-slate-400"></i>
+            </button>
+
+            <button
+              onclick="app.showToast('Menyinkronkan data ke Cloud...', 'info')"
+              class="w-full flex items-center justify-between p-4 border-b border-slate-100 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"
+                >
+                  <i class="ph-fill ph-cloud-arrow-up text-xl"></i>
+                </div>
+                <div class="text-left">
+                  <p class="font-semibold text-slate-800 text-sm">
+                    Sinkronisasi Data
+                  </p>
+                  <p class="text-xs text-slate-500">Backup data ke server</p>
+                </div>
+              </div>
+              <i class="ph-bold ph-caret-right text-slate-400"></i>
+            </button>
+
+            <button
+              onclick="app.sendToKodular('LOGOUT')"
+              class="w-full flex items-center justify-between p-4 hover:bg-red-50 active:bg-red-100 transition-colors group"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-white transition-colors"
+                >
+                  <i class="ph-fill ph-sign-out text-xl"></i>
+                </div>
+                <div class="text-left">
+                  <p class="font-semibold text-red-600 text-sm">Keluar Akun</p>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <div class="text-center pb-8">
+            <p class="text-xs text-slate-400 font-medium">
+              Aplikasi Tera Perindag v1.3.0
+            </p>
+            <p class="text-[10px] text-slate-400 mt-1">
+              &copy; 2026 Dinas Perindag
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================
+             BOTTOM NAVIGATION
+             ============================== -->
+      <div
+        class="bg-white/80 backdrop-blur-md border-t border-slate-200 flex justify-around items-center p-2 pb-safe absolute bottom-0 w-full z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]"
+      >
+        <button
+          onclick="app.switchTab('dashboard')"
+          class="nav-btn p-2 flex flex-col items-center gap-1 w-16 group active-scale"
+          data-target="dashboard"
+        >
+          <i
+            class="ph-fill ph-house text-2xl text-blue-600 group-[.inactive]:text-slate-400 group-[.inactive]:ph"
+          ></i>
+          <span
+            class="text-[10px] font-bold text-blue-600 group-[.inactive]:text-slate-500 group-[.inactive]:font-medium transition-colors"
+            >Beranda</span
+          >
+        </button>
+        <button
+          onclick="app.switchTab('data')"
+          class="nav-btn p-2 flex flex-col items-center gap-1 w-16 group inactive active-scale"
+          data-target="data"
+        >
+          <i class="ph ph-folder text-2xl text-slate-400"></i>
+          <span class="text-[10px] font-medium text-slate-500 transition-colors"
+            >Data</span
+          >
+        </button>
+
+        <!-- Floating FAB for Input -->
+        <div class="relative -top-5">
+          <button
+            onclick="app.switchTab('input')"
+            class="nav-btn w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 text-white border-4 border-white active-scale transition-transform"
+            data-target="input"
+          >
+            <i class="ph-bold ph-plus text-2xl"></i>
+          </button>
+        </div>
+
+        <button
+          onclick="app.switchTab('profile')"
+          class="nav-btn p-2 flex flex-col items-center gap-1 w-16 group inactive active-scale"
+          data-target="profile"
+        >
+          <i class="ph ph-user text-2xl text-slate-400"></i>
+          <span class="text-[10px] font-medium text-slate-500 transition-colors"
+            >Profil</span
+          >
+        </button>
+      </div>
+
+      <!-- ==============================
+             MODALS & POPUPS
+             ============================== -->
+
+      <!-- Modal Edit Profil -->
+      <div
+        id="profile-edit-modal"
+        class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-end justify-center opacity-0 pointer-events-none transition-all duration-300 pb-safe"
+      >
+        <div
+          id="profile-edit-content"
+          class="bg-white w-full rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 flex flex-col max-h-[90%]"
+        >
+          <div
+            class="flex items-center justify-between p-5 border-b border-slate-100"
+          >
+            <h3 class="font-bold text-slate-800 text-lg">Edit Profil</h3>
+            <button
+              onclick="app.closeEditProfile()"
+              class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 active-scale transition-colors"
+            >
+              <i class="ph-bold ph-x"></i>
+            </button>
+          </div>
+          <div class="p-5 overflow-y-auto">
+            <form id="profile-edit-form" class="space-y-4">
+              <div>
+                <label
+                  class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                  >Nama Lengkap</label
+                >
+                <input
+                  type="text"
+                  id="input-profile-name"
+                  required
+                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                  >NIP Pegawai</label
+                >
+                <input
+                  type="text"
+                  id="input-profile-nip"
+                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wide"
+                  >Jabatan / Peran</label
+                >
+                <input
+                  type="text"
+                  id="input-profile-role"
+                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                />
+              </div>
+              <div class="pt-4 pb-2">
+                <button
+                  type="submit"
+                  class="w-full py-3.5 bg-blue-600 text-white rounded-xl font-bold shadow-md active-scale transition-transform flex items-center justify-center gap-2"
+                >
+                  <i class="ph ph-check-circle text-xl"></i> Simpan Perubahan
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Detail Data & CRUD -->
+      <div
+        id="detail-modal"
+        class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-end justify-center opacity-0 pointer-events-none transition-all duration-300 pb-safe"
+      >
+        <div
+          id="detail-modal-content"
+          class="bg-white w-full rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 flex flex-col max-h-[90%]"
+        >
+          <div
+            class="flex items-center justify-between p-5 border-b border-slate-100"
+          >
+            <h3 class="font-bold text-slate-800 text-lg">Detail Pengujian</h3>
+            <button
+              onclick="app.closeDetail()"
+              class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 active-scale transition-colors"
+            >
+              <i class="ph-bold ph-x"></i>
+            </button>
+          </div>
+          <div class="p-5 overflow-y-auto space-y-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <p
+                  class="text-xs font-semibold text-slate-400 uppercase tracking-wide"
+                >
+                  ID Register
+                </p>
+                <p class="text-lg font-extrabold text-slate-800" id="detail-id">
+                  -
+                </p>
+              </div>
+              <div id="detail-status-badge"></div>
+            </div>
+
+            <div
+              class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3"
+            >
+              <div>
+                <p
+                  class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide"
+                >
+                  Nama Pemilik / Usaha
+                </p>
+                <p
+                  class="text-sm font-bold text-slate-700 mt-0.5"
+                  id="detail-nama"
+                >
+                  -
+                </p>
+              </div>
+              <div class="h-px bg-slate-200"></div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <p
+                    class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide"
+                  >
+                    Jenis UTTP
+                  </p>
+                  <p
+                    class="text-sm font-bold text-slate-700 mt-0.5"
+                    id="detail-jenis"
+                  >
+                    -
+                  </p>
+                </div>
+                <div>
+                  <p
+                    class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide"
+                  >
+                    Kapasitas
+                  </p>
+                  <p
+                    class="text-sm font-bold text-slate-700 mt-0.5"
+                    id="detail-kapasitas"
+                  >
+                    -
+                  </p>
+                </div>
+              </div>
+              <div class="h-px bg-slate-200"></div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <p
+                    class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide"
+                  >
+                    Waktu Input
+                  </p>
+                  <p
+                    class="text-sm font-bold text-slate-700 mt-0.5"
+                    id="detail-tanggal"
+                  >
+                    -
+                  </p>
+                </div>
+                <div>
+                  <p
+                    class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide"
+                  >
+                    Retribusi
+                  </p>
+                  <p
+                    class="text-sm font-bold text-slate-700 mt-0.5 text-blue-600"
+                    id="detail-retribusi"
+                  >
+                    -
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-2">
+              <button
+                id="btn-delete-data"
+                class="w-full py-3 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold active-scale transition-transform flex items-center justify-center gap-2"
+              >
+                <i class="ph-bold ph-trash"></i> Hapus
+              </button>
+              <button
+                id="btn-print-skhp"
+                class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-600/30 active-scale transition-transform flex items-center justify-center gap-2"
+              >
+                <i class="ph-bold ph-printer"></i> Cetak SKHP
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Notifications -->
+      <div
+        id="notification-modal"
+        class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-end opacity-0 pointer-events-none transition-all duration-300"
+      >
+        <div
+          id="notification-modal-content"
+          class="bg-white w-4/5 md:w-[300px] h-full shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col"
+        >
+          <div
+            class="flex items-center justify-between p-5 border-b border-slate-100 bg-blue-600 text-white rounded-tl-2xl"
+          >
+            <h3 class="font-bold text-lg flex items-center gap-2">
+              <i class="ph-fill ph-bell-ringing"></i> Notifikasi
+            </h3>
+            <button
+              onclick="app.closeNotifications()"
+              class="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 active-scale transition-colors"
+            >
+              <i class="ph-bold ph-x"></i>
+            </button>
+          </div>
+          <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
+            <!-- Notif 1 -->
+            <div
+              class="bg-white p-3 rounded-xl shadow-sm border border-slate-100"
+            >
+              <div class="flex items-start gap-3">
+                <div
+                  class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5"
+                >
+                  <i class="ph-fill ph-info"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-slate-800 leading-tight">
+                    Pembaruan Sistem v1.3
+                  </p>
+                  <p class="text-xs text-slate-500 mt-1">
+                    Sistem dilengkapi fitur retribusi, GPS satelit dan cetak
+                    SKHP.
+                  </p>
+                  <p class="text-[10px] text-slate-400 mt-2">Hari ini, 08:00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Notification Container -->
+      <div
+        id="toast-container"
+        class="absolute top-10 left-0 right-0 flex flex-col items-center pointer-events-none z-[100] px-4 space-y-2"
+      ></div>
+    </div>
+
+    <!-- ==============================
+         JAVASCRIPT LOGIC
+         ============================== -->
+    <script>
+      const app = {
+        // --- DATA STATE ---
+        state: {
+          teraData: [],
+          currentFilter: "Semua",
+          searchQuery: "",
+          userProfile: {
+            name: "Petugas Tera",
+            nip: "NIP. 19900101 201001 1 001",
+            role: "Penera Ahli Pertama",
+          },
+        },
+
+        // --- DUMMY DATA FOR INITIALIZATION ---
+        defaultData: [
+          {
+            id: "TR-2026-0801",
+            nama: "Toko Sejahtera",
+            jenis: "Timbangan Meja",
+            kapasitas: "10 Kg",
+            status: "Sah",
+            tanggal: "10 Agt 2026, 09:30",
+            retribusi: 15000,
+            icon: "scales",
+          },
+          {
+            id: "TR-2026-0802",
+            nama: "Pasar Sentral (Ibu Ani)",
+            jenis: "Takaran Kering",
+            kapasitas: "1 Liter",
+            status: "Sah",
+            tanggal: "10 Agt 2026, 08:15",
+            retribusi: 5000,
+            icon: "cylinder",
+          },
+          {
+            id: "TR-2026-0803",
+            nama: "SPBU Ahmad Yani",
+            jenis: "Pompa Ukur BBM",
+            kapasitas: "Nozzle 1-4",
+            status: "Sah",
+            tanggal: "09 Agt 2026, 14:20",
+            retribusi: 150000,
+            icon: "gas-pump",
+          },
+        ],
+
+        // --- DOM ELEMENTS REFERENCES ---
+        els: {
+          screens: document.querySelectorAll(".screen"),
+          navBtns: document.querySelectorAll(".nav-btn"),
+          listContainer: document.getElementById("data-list-container"),
+          recentContainer: document.getElementById("recent-activity-container"),
+          statTotal: document.getElementById("stat-total"),
+          statPenerimaan: document.getElementById("stat-penerimaan"),
+
+          // Filters & Search
+          filterBtns: document.querySelectorAll(".filter-btn"),
+          searchInput: document.getElementById("search-input"),
+
+          // Profile & Modals
+          profileNameHeader: document.getElementById("header-title"),
+          profileNameDisplay: document.getElementById("profile-name-display"),
+          profileNipDisplay: document.getElementById("profile-nip-display"),
+          profileRoleDisplay: document.getElementById("profile-role-display"),
+
+          profileEditModal: document.getElementById("profile-edit-modal"),
+          profileEditContent: document.getElementById("profile-edit-content"),
+          profileEditForm: document.getElementById("profile-edit-form"),
+          inputProfileName: document.getElementById("input-profile-name"),
+          inputProfileNip: document.getElementById("input-profile-nip"),
+          inputProfileRole: document.getElementById("input-profile-role"),
+
+          detailModal: document.getElementById("detail-modal"),
+          detailModalContent: document.getElementById("detail-modal-content"),
+          notificationModal: document.getElementById("notification-modal"),
+          notificationModalContent: document.getElementById(
+            "notification-modal-content",
+          ),
+
+          // Form Inputs
+          inputKoordinat: document.getElementById("input-koordinat"),
+          inputRetribusi: document.getElementById("input-retribusi"),
+        },
+
+        // --- INITIALIZATION ---
+        init() {
+          this.loadData();
+          this.updateDashboardStats();
+          this.renderRecentActivity();
+          this.setupEventListeners();
+          this.updateProfileUI();
+        },
+
+        // --- CORE FUNCTIONS ---
+        loadData() {
+          const savedData = localStorage.getItem("teraApp_data");
+          if (savedData) {
+            this.state.teraData = JSON.parse(savedData);
+          } else {
+            this.state.teraData = [...this.defaultData];
+            this.saveData();
+          }
+
+          const savedProfile = localStorage.getItem("teraApp_profile");
+          if (savedProfile) {
+            this.state.userProfile = JSON.parse(savedProfile);
+          }
+        },
+
+        saveData() {
+          localStorage.setItem(
+            "teraApp_data",
+            JSON.stringify(this.state.teraData),
+          );
+        },
+
+        saveProfile() {
+          localStorage.setItem(
+            "teraApp_profile",
+            JSON.stringify(this.state.userProfile),
+          );
+        },
+
+        formatRupiah(number) {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(number);
+        },
+
+        // --- UI & RENDERING ---
+        switchTab(targetId) {
+          this.els.screens.forEach((screen) => {
+            if (screen.id === `screen-${targetId}`) {
+              screen.classList.remove("hidden");
+              screen.classList.add("flex");
+            } else {
+              screen.classList.add("hidden");
+              screen.classList.remove("flex");
+            }
+          });
+
+          this.els.navBtns.forEach((btn) => {
+            if (btn.dataset.target === "input") return; // Skip styling floating fab
+
+            const icon = btn.querySelector("i");
+            const text = btn.querySelector("span");
+
+            if (btn.dataset.target === targetId) {
+              btn.classList.remove("inactive");
+              icon.classList.add("ph-fill");
+              icon.classList.remove("ph");
+              icon.classList.add("text-blue-600");
+              icon.classList.remove("text-slate-400");
+              text.classList.add("text-blue-600", "font-bold");
+              text.classList.remove("text-slate-500", "font-medium");
+            } else {
+              btn.classList.add("inactive");
+              icon.classList.remove("ph-fill");
+              icon.classList.add("ph");
+              icon.classList.remove("text-blue-600");
+              icon.classList.add("text-slate-400");
+              text.classList.remove("text-blue-600", "font-bold");
+              text.classList.add("text-slate-500", "font-medium");
+            }
+          });
+
+          if (targetId === "data") {
+            this.renderDataList();
+          } else if (targetId === "dashboard") {
+            this.updateDashboardStats();
+            this.renderRecentActivity();
+          }
+        },
+
+        updateDashboardStats() {
+          const currentMonth = new Date().getMonth();
+          const currentYear = new Date().getFullYear();
+
+          let totalBulanIni = 0;
+          let totalPenerimaan = 0;
+
+          this.state.teraData.forEach((item) => {
+            // Parsing basic string date like '10 Agt 2026, 09:30' is tricky in pure JS without libraries
+            // We'll approximate for demo purposes: just count everything for now, or assume it's this month
+            totalBulanIni++;
+            if (item.status === "Sah") {
+              totalPenerimaan += item.retribusi || 0;
+            }
+          });
+
+          this.els.statTotal.innerText = totalBulanIni;
+          this.els.statPenerimaan.innerText =
+            this.formatRupiah(totalPenerimaan);
+        },
+
+        renderRecentActivity() {
+          const recentData = [...this.state.teraData].reverse().slice(0, 3);
+          let html = "";
+
+          if (recentData.length === 0) {
+            html = `<p class="text-center text-sm text-slate-400 py-4">Belum ada aktivitas.</p>`;
+          } else {
+            recentData.forEach((item) => {
+              const isSah = item.status === "Sah";
+              const iconColor = isSah ? "text-green-600" : "text-red-600";
+              const iconBg = isSah ? "bg-green-50" : "bg-red-50";
+
+              html += `
+                    <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between active-scale transition-transform cursor-pointer" onclick="app.openDetail('${item.id}')">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-12 h-12 rounded-full ${iconBg} flex items-center justify-center ${iconColor}">
+                                <i class="ph-fill ph-${item.icon} text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm leading-tight">${item.nama}</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">${item.jenis} • ${item.kapasitas}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide ${isSah ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}">${item.status}</span>
+                            <p class="text-[10px] text-slate-400 mt-1">${item.tanggal.split(",")[0]}</p>
+                        </div>
+                    </div>`;
+            });
+          }
+          this.els.recentContainer.innerHTML = html;
+        },
+
+        renderDataList() {
+          let dataToRender = [...this.state.teraData].reverse();
+
+          // Apply Status Filter
+          if (this.state.currentFilter !== "Semua") {
+            dataToRender = dataToRender.filter(
+              (item) => item.status === this.state.currentFilter,
+            );
+          }
+
+          // Apply Search Filter
+          if (this.state.searchQuery.trim() !== "") {
+            const query = this.state.searchQuery.toLowerCase();
+            dataToRender = dataToRender.filter(
+              (item) =>
+                item.nama.toLowerCase().includes(query) ||
+                item.jenis.toLowerCase().includes(query),
+            );
+          }
+
+          let html = "";
+
+          if (dataToRender.length === 0) {
+            html = `
+                <div class="flex flex-col items-center justify-center py-10 text-slate-400">
+                    <i class="ph ph-magnifying-glass text-4xl mb-2 text-slate-300"></i>
+                    <p class="text-sm font-medium">Tidak ada data ditemukan.</p>
+                </div>`;
+          } else {
+            dataToRender.forEach((item) => {
+              const isSah = item.status === "Sah";
+
+              html += `
+                    <div onclick="app.openDetail('${item.id}')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden active-scale transition-transform cursor-pointer">
+                        <div class="absolute left-0 top-0 bottom-0 w-1 ${isSah ? "bg-green-500" : "bg-red-500"}"></div>
+                        
+                        <div class="flex justify-between items-start pl-2">
+                            <div>
+                                <p class="text-[10px] text-slate-400 font-semibold mb-1">${item.id} • ${item.tanggal}</p>
+                                <h3 class="font-bold text-slate-800 text-sm">${item.nama}</h3>
+                                <p class="text-xs text-slate-500 mt-0.5">${item.jenis}</p>
+                            </div>
+                            <div class="text-right flex flex-col items-end">
+                                <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide ${isSah ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}">${item.status}</span>
+                                ${isSah && item.retribusi ? `<span class="text-xs font-bold text-blue-600 mt-2">${this.formatRupiah(item.retribusi)}</span>` : ""}
+                            </div>
+                        </div>
+                    </div>`;
+            });
+          }
+
+          this.els.listContainer.innerHTML = html;
+        },
+
+        // --- EVENT LISTENERS & LOGIC ---
+        setupEventListeners() {
+          // Filter Buttons
+          this.els.filterBtns.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              this.els.filterBtns.forEach((b) => {
+                b.classList.remove(
+                  "bg-blue-600",
+                  "text-white",
+                  "shadow-md",
+                  "shadow-blue-500/20",
+                );
+                b.classList.add("bg-white", "text-slate-600");
+              });
+
+              e.target.classList.remove("bg-white", "text-slate-600");
+              e.target.classList.add(
+                "bg-blue-600",
+                "text-white",
+                "shadow-md",
+                "shadow-blue-500/20",
+              );
+
+              this.state.currentFilter = e.target.dataset.filter;
+              this.renderDataList();
+            });
+          });
+
+          // Search Input
+          this.els.searchInput.addEventListener("input", (e) => {
+            this.state.searchQuery = e.target.value;
+            this.renderDataList();
+          });
+
+          // Form Submit
+          document
+            .getElementById("form-tera")
+            .addEventListener("submit", (e) => {
+              e.preventDefault();
+              this.handleFormSubmit();
+            });
+
+          // Profile Form Submit
+          this.els.profileEditForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            this.saveProfileData();
+          });
+        },
+
+        handleFormSubmit() {
+          const nama = document.getElementById("input-nama").value;
+          const jenisEl = document.getElementById("input-jenis");
+          const jenis = jenisEl.options[jenisEl.selectedIndex].value;
+          const kapasitas =
+            document.getElementById("input-kapasitas").value || "-";
+          const status = document.querySelector(
+            'input[name="status-tera"]:checked',
+          ).value;
+          const retribusi = parseInt(this.els.inputRetribusi.value) || 0;
+
+          // ID Gen
+          const dateObj = new Date();
+          const year = dateObj.getFullYear();
+          const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+          const randomCode = Math.floor(1000 + Math.random() * 9000);
+          const newId = `TR-${year}${month}-${randomCode}`;
+
+          // Date Format
+          const options = {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          };
+          const formattedDate = dateObj
+            .toLocaleDateString("id-ID", options)
+            .replace(/\./g, ":");
+
+          // Icon Map
+          let icon = "scales";
+          const jenisLower = jenis.toLowerCase();
+          if (jenisLower.includes("takaran") || jenisLower.includes("liter"))
+            icon = "cylinder";
+          if (jenisLower.includes("pompa") || jenisLower.includes("bbm"))
+            icon = "gas-pump";
+
+          const newData = {
+            id: newId,
+            nama: nama,
+            jenis: jenis,
+            kapasitas: kapasitas,
+            status: status,
+            tanggal: formattedDate,
+            retribusi: retribusi,
+            icon: icon,
+          };
+
+          this.state.teraData.push(newData);
+          this.saveData();
+
+          // Reset form
+          document.getElementById("form-tera").reset();
+          this.els.inputKoordinat.value = "";
+
+          // Provide Feedback & Redirect
+          this.showToast("Data Tera berhasil disimpan!", "success");
+          this.switchTab("dashboard");
+        },
+
+        // --- PROFILE LOGIC ---
+        updateProfileUI() {
+          // Header Beranda
+          const firstName = this.state.userProfile.name.split(" ")[0];
+          this.els.profileNameHeader.innerText = `Selamat bertugas, ${firstName}`;
+
+          // Tab Profil
+          this.els.profileNameDisplay.innerText = this.state.userProfile.name;
+          this.els.profileNipDisplay.innerText = this.state.userProfile.nip;
+          this.els.profileRoleDisplay.innerText = this.state.userProfile.role;
+        },
+
+        openEditProfile() {
+          this.els.inputProfileName.value = this.state.userProfile.name;
+          this.els.inputProfileNip.value = this.state.userProfile.nip;
+          this.els.inputProfileRole.value = this.state.userProfile.role;
+
+          this.els.profileEditModal.classList.remove(
+            "opacity-0",
+            "pointer-events-none",
+          );
+          this.els.profileEditContent.classList.remove("translate-y-full");
+        },
+
+        closeEditProfile() {
+          this.els.profileEditContent.classList.add("translate-y-full");
+          setTimeout(() => {
+            this.els.profileEditModal.classList.add(
+              "opacity-0",
+              "pointer-events-none",
+            );
+          }, 300);
+        },
+
+        saveProfileData() {
+          this.state.userProfile.name = this.els.inputProfileName.value;
+          this.state.userProfile.nip = this.els.inputProfileNip.value;
+          this.state.userProfile.role = this.els.inputProfileRole.value;
+
+          this.saveProfile();
+          this.updateProfileUI();
+          this.closeEditProfile();
+          this.showToast("Profil berhasil diperbarui!", "success");
+        },
+
+        // --- GPS & HARDWARE INTEGRATION ---
+        getLocation() {
+          this.showToast("Menghubungkan ke Satelit GPS...", "info");
+          this.sendToKodular("GET_LOCATION");
+
+          // Simulasi untuk Web
+          setTimeout(() => {
+            this.els.inputKoordinat.value = "-3.9962, 122.5126 (Akurasi: 4m)";
+            this.showToast("Titik koordinat berhasil dikunci", "success");
+          }, 1500);
+        },
+
+        // --- DETAIL & MODALS (CRUD) ---
+        openDetail(id) {
+          const item = this.state.teraData.find((d) => d.id === id);
+          if (!item) return;
+
+          document.getElementById("detail-id").innerText = item.id;
+          document.getElementById("detail-nama").innerText = item.nama;
+          document.getElementById("detail-jenis").innerText = item.jenis;
+          document.getElementById("detail-kapasitas").innerText =
+            item.kapasitas;
+          document.getElementById("detail-tanggal").innerText = item.tanggal;
+          document.getElementById("detail-retribusi").innerText =
+            this.formatRupiah(item.retribusi || 0);
+
+          const statusEl = document.getElementById("detail-status-badge");
+          statusEl.className = `px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${item.status === "Sah" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`;
+          statusEl.innerText = item.status;
+
+          document.getElementById("btn-delete-data").onclick = () =>
+            this.deleteData(id);
+          document.getElementById("btn-print-skhp").onclick = () => {
+            this.sendToKodular("PRINT_SKHP", item);
+            this.showToast(
+              "Mengirim perintah ke Printer Bluetooth...",
+              "success",
+            );
+          };
+
+          this.els.detailModal.classList.remove(
+            "opacity-0",
+            "pointer-events-none",
+          );
+          this.els.detailModalContent.classList.remove("translate-y-full");
+        },
+
+        closeDetail() {
+          this.els.detailModalContent.classList.add("translate-y-full");
+          setTimeout(() => {
+            this.els.detailModal.classList.add(
+              "opacity-0",
+              "pointer-events-none",
+            );
+          }, 300);
+        },
+
+        deleteData(id) {
+          if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+            this.state.teraData = this.state.teraData.filter(
+              (d) => d.id !== id,
+            );
+            this.saveData();
+            this.updateDashboardStats();
+            this.renderRecentActivity();
+            this.renderDataList();
+            this.closeDetail();
+            this.showToast("Data pengujian berhasil dihapus", "success");
+          }
+        },
+
+        openNotifications() {
+          this.els.notificationModal.classList.remove(
+            "opacity-0",
+            "pointer-events-none",
+          );
+          this.els.notificationModalContent.classList.remove(
+            "translate-x-full",
+          );
+        },
+
+        closeNotifications() {
+          this.els.notificationModalContent.classList.add("translate-x-full");
+          setTimeout(() => {
+            this.els.notificationModal.classList.add(
+              "opacity-0",
+              "pointer-events-none",
+            );
+          }, 300);
+        },
+
+        // --- UTILITIES ---
+        showToast(message, type = "success") {
+          const container = document.getElementById("toast-container");
+          const toast = document.createElement("div");
+
+          const colors =
+            type === "success"
+              ? "bg-green-600"
+              : type === "error"
+                ? "bg-red-600"
+                : "bg-slate-800";
+          const icon =
+            type === "success"
+              ? "ph-check-circle"
+              : type === "error"
+                ? "ph-x-circle"
+                : "ph-info";
+
+          toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg text-white text-sm font-medium ${colors} toast-animate`;
+          toast.innerHTML = `<i class="ph-fill ${icon} text-lg"></i> ${message}`;
+
+          container.appendChild(toast);
+          setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(-10px)";
+            toast.style.transition = "all 0.3s ease";
+            setTimeout(() => toast.remove(), 300);
+          }, 3000);
+        },
+
+        // --- KODULAR BRIDGE ---
+        sendToKodular(action, data = {}) {
+          const payload = JSON.stringify({ action: action, data: data });
+
+          if (window.AppInventor && window.AppInventor.setWebViewString) {
+            window.AppInventor.setWebViewString(payload);
+          } else {
+            console.log("Kodular Bridge (Simulasi):", payload);
+            if (action === "CONNECT_PRINTER")
+              this.showToast("Mencari Printer Bluetooth...", "info");
+            if (action === "LOGOUT")
+              this.showToast("Sesi Anda telah diakhiri.", "success");
+            if (action === "OPEN_SETTINGS")
+              this.showToast("Membuka Pengaturan Android", "info");
+          }
+        },
+      };
+
+      // Initialize when DOM is ready
+      document.addEventListener("DOMContentLoaded", () => {
+        app.init();
+      });
+    </script>
+  </body>
+</html>
