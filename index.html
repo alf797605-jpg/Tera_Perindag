@@ -25,6 +25,8 @@
       * {
         -ms-overflow-style: none;
         scrollbar-width: none;
+        /* Menambahkan properti ini agar sentuhan di HP lebih responsif (hilangkan tap highlight) */
+        -webkit-tap-highlight-color: transparent;
       }
 
       .active-nav {
@@ -106,12 +108,12 @@
               <p class="text-blue-200 text-xs mt-1">Dinas Perindag</p>
             </div>
             <div
-              class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/30"
-              onclick="alertCustom('Belum ada notifikasi baru')"
+              class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/30 btn-interact"
+              data-action="notif"
             >
-              <i class="ph ph-bell text-white text-2xl"></i>
+              <i class="ph ph-bell text-white text-2xl pointer-events-none"></i>
               <div
-                class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-blue-600"
+                class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-blue-600 pointer-events-none"
               ></div>
             </div>
           </div>
@@ -155,8 +157,8 @@
                 Aktivitas Terakhir
               </h3>
               <button
-                onclick="switchTab('data')"
-                class="text-blue-600 text-xs font-bold active-scale"
+                class="nav-btn text-blue-600 text-xs font-bold active-scale"
+                data-target="data"
               >
                 Lihat Semua
               </button>
@@ -272,10 +274,12 @@
                 />
                 <button
                   type="button"
-                  onclick="getGPSLocation()"
-                  class="bg-blue-100 text-blue-600 px-4 rounded-xl font-bold active-scale flex items-center justify-center"
+                  class="bg-blue-100 text-blue-600 px-4 rounded-xl font-bold active-scale flex items-center justify-center btn-interact"
+                  data-action="gps"
                 >
-                  <i class="ph-bold ph-crosshair text-lg"></i>
+                  <i
+                    class="ph-bold ph-crosshair text-lg pointer-events-none"
+                  ></i>
                 </button>
               </div>
             </div>
@@ -397,7 +401,6 @@
             </div>
           </div>
 
-          <!-- Tombol Submit (Diberi margin bottom besar agar tidak tertutup menu) -->
           <div class="pt-2 pb-10">
             <button
               type="submit"
@@ -421,10 +424,12 @@
             class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative"
           >
             <button
-              onclick="openEditProfile()"
-              class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-600 active-scale"
+              class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-600 active-scale btn-interact"
+              data-action="editProfile"
             >
-              <i class="ph-bold ph-pencil-simple text-sm"></i>
+              <i
+                class="ph-bold ph-pencil-simple text-sm pointer-events-none"
+              ></i>
             </button>
             <div class="flex items-center gap-4">
               <div
@@ -454,10 +459,10 @@
             class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
           >
             <button
-              onclick="connectPrinter()"
-              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group"
+              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group btn-interact"
+              data-action="connectPrinter"
             >
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-3 pointer-events-none">
                 <div
                   class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors"
                 >
@@ -472,16 +477,16 @@
                   </p>
                 </div>
               </div>
-              <i class="ph-bold ph-caret-right text-slate-300"></i>
+              <i
+                class="ph-bold ph-caret-right text-slate-300 pointer-events-none"
+              ></i>
             </button>
 
             <button
-              onclick="
-                alertCustom('Sinkronisasi berjalan otomatis melalui Firebase.')
-              "
-              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group"
+              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group btn-interact"
+              data-action="syncInfo"
             >
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-3 pointer-events-none">
                 <div
                   class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors"
                 >
@@ -496,14 +501,16 @@
                   </p>
                 </div>
               </div>
-              <i class="ph-bold ph-caret-right text-slate-300"></i>
+              <i
+                class="ph-bold ph-caret-right text-slate-300 pointer-events-none"
+              ></i>
             </button>
 
             <button
-              onclick="alertCustom('Fungsi Logout. (Simulasi)')"
-              class="w-full p-4 flex items-center justify-between active:bg-red-50 transition-colors group"
+              class="w-full p-4 flex items-center justify-between active:bg-red-50 transition-colors group btn-interact"
+              data-action="logout"
             >
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-3 pointer-events-none">
                 <div
                   class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-white transition-colors"
                 >
@@ -528,48 +535,53 @@
       </div>
 
       <!-- ================= BOTTOM NAVIGATION ================= -->
+      <!-- NOTE: Atribut onclick dihilangkan, diganti murni JS listener (nav-btn) -->
       <div
         class="absolute bottom-0 w-full bg-white/90 backdrop-blur-md border-t border-slate-100 flex justify-between items-center px-6 py-2 shadow-[0_-5px_15px_-10px_rgba(0,0,0,0.1)] z-50"
       >
         <button
-          onclick="switchTab('home')"
           class="nav-btn flex flex-col items-center gap-1 p-2 w-16 active-nav"
           data-target="home"
         >
-          <i class="ph ph-house text-2xl text-slate-400 transition-colors"></i>
-          <span class="text-[10px] text-slate-400 font-medium transition-colors"
+          <i
+            class="ph ph-house text-2xl text-slate-400 transition-colors pointer-events-none"
+          ></i>
+          <span
+            class="text-[10px] text-slate-400 font-medium transition-colors pointer-events-none"
             >Beranda</span
           >
         </button>
         <button
-          onclick="switchTab('data')"
           class="nav-btn flex flex-col items-center gap-1 p-2 w-16"
           data-target="data"
         >
-          <i class="ph ph-folder text-2xl text-slate-400 transition-colors"></i>
-          <span class="text-[10px] text-slate-400 font-medium transition-colors"
+          <i
+            class="ph ph-folder text-2xl text-slate-400 transition-colors pointer-events-none"
+          ></i>
+          <span
+            class="text-[10px] text-slate-400 font-medium transition-colors pointer-events-none"
             >Data</span
           >
         </button>
 
-        <!-- Tombol Tambah Tengah (Mengarah ke Input) -->
         <div class="relative -top-6">
           <button
-            onclick="switchTab('input')"
             class="nav-btn w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 text-white active-scale border-4 border-slate-50"
             data-target="input"
           >
-            <i class="ph-bold ph-plus text-2xl"></i>
+            <i class="ph-bold ph-plus text-2xl pointer-events-none"></i>
           </button>
         </div>
 
         <button
-          onclick="switchTab('profil')"
           class="nav-btn flex flex-col items-center gap-1 p-2 w-16"
           data-target="profil"
         >
-          <i class="ph ph-user text-2xl text-slate-400 transition-colors"></i>
-          <span class="text-[10px] text-slate-400 font-medium transition-colors"
+          <i
+            class="ph ph-user text-2xl text-slate-400 transition-colors pointer-events-none"
+          ></i>
+          <span
+            class="text-[10px] text-slate-400 font-medium transition-colors pointer-events-none"
             >Profil</span
           >
         </button>
@@ -698,23 +710,24 @@
 
           <div class="flex gap-3 mt-4 flex-shrink-0">
             <button
-              onclick="closeModal('modal-detail')"
-              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale"
+              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale btn-interact"
+              data-action="closeModal"
+              data-target="modal-detail"
             >
               Tutup
             </button>
             <button
-              onclick="printSKHP()"
-              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale flex items-center justify-center gap-2"
+              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale flex items-center justify-center gap-2 btn-interact"
+              data-action="printSKHP"
             >
-              <i class="ph-bold ph-printer"></i> Cetak SKHP
+              <i class="ph-bold ph-printer pointer-events-none"></i> Cetak SKHP
             </button>
           </div>
           <button
-            onclick="deleteCurrentData()"
-            class="mt-3 py-2 text-red-500 text-xs font-bold flex items-center justify-center gap-1 active-scale"
+            class="mt-3 py-2 text-red-500 text-xs font-bold flex items-center justify-center gap-1 active-scale btn-interact"
+            data-action="deleteData"
           >
-            <i class="ph-bold ph-trash"></i> Hapus Data Ini
+            <i class="ph-bold ph-trash pointer-events-none"></i> Hapus Data Ini
           </button>
         </div>
       </div>
@@ -767,14 +780,15 @@
 
           <div class="flex gap-3 mt-6">
             <button
-              onclick="closeModal('modal-edit-profil')"
-              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale"
+              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale btn-interact"
+              data-action="closeModal"
+              data-target="modal-edit-profil"
             >
               Batal
             </button>
             <button
-              onclick="saveProfile()"
-              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale"
+              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale btn-interact"
+              data-action="saveProfile"
             >
               Simpan
             </button>
@@ -790,6 +804,215 @@
         Pesan notifikasi
       </div>
     </div>
+
+    <!-- SCRIPT UI INI DITARUH TERPISAH AGAR TIDAK DIBLOK OLEH FIREBASE JIKA TERJADI ERROR KONEKSI -->
+    <script>
+      // Global Variables untuk UI
+      let globalTeraData = [];
+      let currentDetailId = null;
+      let currentFilter = "Semua";
+
+      // Fungsi Navigasi Tab
+      function switchTab(tabId) {
+        // Sembunyikan semua page (Pakai style.display untuk pastikan WebView memproses)
+        document.querySelectorAll(".page").forEach((page) => {
+          page.style.display = "none";
+          page.classList.remove("active");
+        });
+
+        // Tampilkan page target
+        const targetPage = document.getElementById(`page-${tabId}`);
+        if (targetPage) {
+          targetPage.style.display = "flex";
+          targetPage.classList.add("active");
+        }
+
+        // Update UI Button di Bottom Nav
+        document.querySelectorAll(".nav-btn").forEach((btn) => {
+          btn.classList.remove("active-nav");
+          const icon = btn.querySelector("i");
+          const text = btn.querySelector("span");
+
+          if (btn.dataset.target !== "input") {
+            if (icon) {
+              icon.classList.remove("text-blue-600", "ph-fill");
+              icon.classList.add("text-slate-400", "ph");
+            }
+            if (text) text.classList.remove("text-blue-600", "font-bold");
+          }
+        });
+
+        // Set tombol yang aktif
+        const activeBtn = document.querySelector(
+          `.nav-btn[data-target="${tabId}"]`,
+        );
+        if (activeBtn && tabId !== "input") {
+          activeBtn.classList.add("active-nav");
+          const activeIcon = activeBtn.querySelector("i");
+          const activeText = activeBtn.querySelector("span");
+          if (activeIcon) {
+            activeIcon.classList.remove("text-slate-400", "ph");
+            activeIcon.classList.add("text-blue-600", "ph-fill");
+          }
+          if (activeText)
+            activeText.classList.add("text-blue-600", "font-bold");
+        }
+      }
+
+      // Fungsi Modal & Utilities
+      function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+        }
+      }
+
+      function alertCustom(msg) {
+        const toast = document.getElementById("toast");
+        if (!toast) return;
+        toast.innerText = msg;
+        toast.classList.remove("opacity-0", "-translate-y-4");
+        toast.classList.add("opacity-100", "translate-y-0");
+
+        setTimeout(() => {
+          toast.classList.remove("opacity-100", "translate-y-0");
+          toast.classList.add("opacity-0", "-translate-y-4");
+        }, 3000);
+      }
+
+      function formatRupiah(angka) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(angka);
+      }
+
+      // Fungsi Buka Detail Data
+      window.openDetail = function (id) {
+        const item = globalTeraData.find((d) => d.id === id);
+        if (!item) return;
+
+        currentDetailId = id;
+        document.getElementById("det-tanggal").innerText = item.tanggal || "-";
+        document.getElementById("det-id").innerText = item.id
+          ? item.id.substring(0, 8).toUpperCase()
+          : "-";
+        document.getElementById("det-nama").innerText = item.nama || "-";
+        document.getElementById("det-alamat").innerText = item.alamat || "-";
+        document.getElementById("det-gps").innerText = item.gps || "-";
+        document.getElementById("det-jenis").innerText = item.jenis || "-";
+        document.getElementById("det-merek").innerText = item.merek || "-";
+        document.getElementById("det-kapasitas").innerText =
+          item.kapasitas || "-";
+        document.getElementById("det-retribusi").innerText = formatRupiah(
+          item.retribusi || 0,
+        );
+
+        const badge = document.getElementById("det-badge");
+        badge.innerText = item.status || "Sah";
+        if (item.status === "Sah") {
+          badge.className =
+            "px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700";
+        } else {
+          badge.className =
+            "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
+        }
+
+        const modal = document.getElementById("modal-detail");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      };
+
+      // ==== EVENT BINDING UNTUK KODULAR ====
+      // Pasang Event Listeners saat DOM selesai diload (sangat krusial untuk WebView)
+      document.addEventListener("DOMContentLoaded", () => {
+        // 1. Binding untuk Bottom Navigation
+        document.querySelectorAll(".nav-btn").forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const target = this.getAttribute("data-target");
+            if (target) switchTab(target);
+          });
+        });
+
+        // 2. Binding untuk Tombol Filter
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            document.querySelectorAll(".filter-btn").forEach((b) => {
+              b.classList.remove("bg-slate-800", "text-white", "active");
+              b.classList.add("bg-white", "text-slate-600", "border-slate-200");
+            });
+
+            const target = e.currentTarget;
+            target.classList.remove(
+              "bg-white",
+              "text-slate-600",
+              "border-slate-200",
+            );
+            target.classList.add("bg-slate-800", "text-white", "active");
+
+            currentFilter = target.getAttribute("data-filter");
+            if (window.renderDataList) window.renderDataList(); // Dipanggil jika fungsi dari Firebase sudah load
+          });
+        });
+
+        // 3. Binding Pencarian
+        const searchInput = document.getElementById("search-input");
+        if (searchInput) {
+          searchInput.addEventListener("input", () => {
+            if (window.renderDataList) window.renderDataList();
+          });
+        }
+
+        // 4. Binding Tombol-tombol interaktif (Profil, GPS, Cetak, dll)
+        document.querySelectorAll(".btn-interact").forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const action = this.getAttribute("data-action");
+
+            if (action === "closeModal") {
+              closeModal(this.getAttribute("data-target"));
+            } else if (action === "editProfile") {
+              document.getElementById("edit-nama").value =
+                document.getElementById("profil-nama").innerText;
+              document.getElementById("edit-jabatan").value =
+                document.getElementById("profil-jabatan").innerText;
+              document.getElementById("edit-nip").value =
+                document.getElementById("profil-nip").innerText;
+              const modalEdit = document.getElementById("modal-edit-profil");
+              modalEdit.classList.remove("hidden");
+              modalEdit.classList.add("flex");
+            } else if (action === "saveProfile") {
+              const dataProfile = {
+                nama: document.getElementById("edit-nama").value,
+                jabatan: document.getElementById("edit-jabatan").value,
+                nip: document.getElementById("edit-nip").value,
+              };
+              localStorage.setItem("teraProfile", JSON.stringify(dataProfile));
+              if (window.loadProfile) window.loadProfile();
+              closeModal("modal-edit-profil");
+              alertCustom("Profil berhasil diperbarui");
+            } else if (action === "notif") {
+              alertCustom("Belum ada notifikasi baru");
+            } else if (action === "syncInfo") {
+              alertCustom("Sinkronisasi berjalan otomatis melalui Firebase.");
+            } else if (action === "logout") {
+              alertCustom("Fungsi Logout. (Simulasi)");
+            } else if (action === "gps") {
+              if (window.getGPSLocation) window.getGPSLocation();
+            } else if (action === "connectPrinter") {
+              if (window.connectPrinter) window.connectPrinter();
+            } else if (action === "printSKHP") {
+              if (window.printSKHP) window.printSKHP();
+            } else if (action === "deleteData") {
+              if (window.deleteCurrentData) window.deleteCurrentData();
+            }
+          });
+        });
+      });
+    </script>
 
     <!-- ================= JAVASCRIPT & FIREBASE ================= -->
     <script type="module">
@@ -817,7 +1040,6 @@
         if (typeof __firebase_config !== "undefined") {
           firebaseConfig = JSON.parse(__firebase_config);
         } else {
-          // Fallback kosong untuk menghindari error parsing jika tidak diinject (meski akan gagal init jika kosong, tapi aman dari syntax error)
           firebaseConfig = {
             apiKey: "mock-key",
             authDomain: "mock-domain.firebaseapp.com",
@@ -828,7 +1050,7 @@
           };
         }
       } catch (e) {
-        console.warn("Firebase config error");
+        console.warn("Firebase config error, mengabaikan...");
       }
 
       const app = initializeApp(firebaseConfig);
@@ -836,354 +1058,9 @@
       const db = getFirestore(app);
 
       let currentUserUid = null;
-      let globalTeraData = [];
-      let currentDetailId = null;
 
-      // UI State Variables
-      let currentFilter = "Semua";
-
-      // Expose functions to window so HTML inline onClick can call them
-      window.switchTab = switchTab;
-      window.openEditProfile = openEditProfile;
-      window.closeModal = closeModal;
-      window.saveProfile = saveProfile;
-      window.alertCustom = alertCustom;
-      window.getGPSLocation = getGPSLocation;
-      window.deleteCurrentData = deleteCurrentData;
-      window.printSKHP = printSKHP;
-      window.connectPrinter = connectPrinter;
-
-      // Format Uang Rupiah
-      function formatRupiah(angka) {
-        return new Intl.NumberFormat("id-ID", {
-          style: "currency",
-          currency: "IDR",
-          minimumFractionDigits: 0,
-        }).format(angka);
-      }
-
-      // ================= AUTHENTICATION =================
-      async function initAuth() {
-        try {
-          if (
-            typeof __initial_auth_token !== "undefined" &&
-            __initial_auth_token
-          ) {
-            await signInWithCustomToken(auth, __initial_auth_token);
-          } else {
-            await signInAnonymously(auth);
-          }
-        } catch (error) {
-          console.error("Auth Error:", error);
-          alertCustom("Gagal terhubung ke Cloud Database");
-        }
-      }
-
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          currentUserUid = user.uid;
-          alertCustom("Terhubung ke Server Cloud");
-          listenToFirestore(); // Mulai tarik data real-time
-        }
-      });
-
-      // ================= FIREBASE CRUD LOGIC =================
-      function listenToFirestore() {
-        if (!currentUserUid) return;
-
-        // Path aturan wajib: /artifacts/{appId}/users/{userId}/{collectionName}
-        const dataRef = collection(
-          db,
-          "artifacts",
-          appId,
-          "users",
-          currentUserUid,
-          "tera_data",
-        );
-
-        // OnSnapshot untuk Auto-Refresh Realtime
-        onSnapshot(
-          dataRef,
-          (snapshot) => {
-            globalTeraData = [];
-            snapshot.forEach((doc) => {
-              globalTeraData.push({ id: doc.id, ...doc.data() });
-            });
-
-            // Urutkan manual (karena larangan complex query di rules)
-            globalTeraData.sort((a, b) => b.timestamp - a.timestamp);
-
-            updateUI();
-          },
-          (error) => {
-            console.error("Error fetching data:", error);
-            alertCustom("Error memuat data sinkronisasi");
-          },
-        );
-      }
-
-      document
-        .getElementById("form-tera")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
-          if (!currentUserUid) {
-            alertCustom("Belum terhubung ke server");
-            return;
-          }
-
-          const simpanBtn = e.target.querySelector('button[type="submit"]');
-          const originalText = simpanBtn.innerHTML;
-          simpanBtn.innerHTML =
-            '<i class="ph-bold ph-spinner animate-spin"></i> Menyimpan...';
-          simpanBtn.disabled = true;
-
-          const newData = {
-            nama: document.getElementById("input-nama").value,
-            alamat: document.getElementById("input-alamat").value || "-",
-            gps: document.getElementById("input-gps").value || "-",
-            jenis: document.getElementById("input-jenis").value,
-            merek: document.getElementById("input-merek").value || "-",
-            kapasitas: document.getElementById("input-kapasitas").value || "-",
-            retribusi:
-              parseInt(document.getElementById("input-retribusi").value) || 0,
-            status: document.querySelector('input[name="status-tera"]:checked')
-              .value,
-            tanggal: new Date().toLocaleDateString("id-ID", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            }),
-            timestamp: Date.now(),
-          };
-
-          try {
-            const dataRef = collection(
-              db,
-              "artifacts",
-              appId,
-              "users",
-              currentUserUid,
-              "tera_data",
-            );
-            await addDoc(dataRef, newData);
-
-            alertCustom("Data berhasil disimpan ke Cloud!");
-            e.target.reset();
-            document.getElementById("input-retribusi").value = "0";
-
-            // Pindah ke tab Data otomatis
-            setTimeout(() => switchTab("data"), 500);
-          } catch (error) {
-            console.error("Error adding document: ", error);
-            alertCustom("Gagal menyimpan data");
-          } finally {
-            simpanBtn.innerHTML = originalText;
-            simpanBtn.disabled = false;
-          }
-        });
-
-      async function deleteCurrentData() {
-        if (!currentUserUid || !currentDetailId) return;
-
-        if (confirm("Yakin ingin menghapus data ini dari Cloud?")) {
-          try {
-            const docRef = doc(
-              db,
-              "artifacts",
-              appId,
-              "users",
-              currentUserUid,
-              "tera_data",
-              currentDetailId,
-            );
-            await deleteDoc(docRef);
-            closeModal("modal-detail");
-            alertCustom("Data berhasil dihapus");
-          } catch (error) {
-            alertCustom("Gagal menghapus data");
-          }
-        }
-      }
-
-      // ================= UI UPDATE LOGIC =================
-      function updateUI() {
-        renderBeranda();
-        renderDataList();
-      }
-
-      function renderBeranda() {
-        // Hitung statistik
-        document.getElementById("stat-total").innerText = globalTeraData.length;
-        const sahCount = globalTeraData.filter(
-          (d) => d.status === "Sah",
-        ).length;
-        document.getElementById("stat-sah").innerText = sahCount;
-
-        // Render Recent (max 3)
-        const recentContainer = document.getElementById("home-recent-list");
-        recentContainer.innerHTML = "";
-
-        if (globalTeraData.length === 0) {
-          recentContainer.innerHTML =
-            '<div class="text-center py-6 text-slate-400 text-sm">Belum ada data pengujian.</div>';
-          return;
-        }
-
-        const recentData = globalTeraData.slice(0, 3);
-        recentData.forEach((item) => {
-          const icon =
-            item.status === "Sah"
-              ? "ph-check-circle text-blue-500"
-              : "ph-x-circle text-red-500";
-          const bg = item.status === "Sah" ? "bg-blue-50" : "bg-red-50";
-
-          recentContainer.innerHTML += `
-                    <div onclick="openDetail('${item.id}')" class="bg-white border border-slate-100 p-3 rounded-xl flex items-center gap-3 shadow-sm hover:shadow-md transition-all active:scale-95">
-                        <div class="w-10 h-10 ${bg} rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="ph-fill ${icon} text-2xl"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-sm text-slate-800 truncate">${item.nama}</h4>
-                            <p class="text-xs text-slate-400 truncate">${item.jenis}</p>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <p class="text-xs font-bold text-slate-700">${item.tanggal}</p>
-                        </div>
-                    </div>
-                `;
-        });
-      }
-
-      function renderDataList() {
-        const container = document.getElementById("data-list-container");
-        const searchQuery = document
-          .getElementById("search-input")
-          .value.toLowerCase();
-        container.innerHTML = "";
-
-        // Filter Logic (Memory side)
-        let filteredData = globalTeraData;
-
-        if (currentFilter !== "Semua") {
-          filteredData = filteredData.filter(
-            (item) => item.status === currentFilter,
-          );
-        }
-        if (searchQuery) {
-          filteredData = filteredData.filter((item) =>
-            item.nama.toLowerCase().includes(searchQuery),
-          );
-        }
-
-        if (filteredData.length === 0) {
-          container.innerHTML = `
-                    <div class="text-center py-10">
-                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <i class="ph-fill ph-magnifying-glass text-2xl text-slate-400"></i>
-                        </div>
-                        <p class="text-slate-500 text-sm font-medium">Tidak ada data ditemukan</p>
-                    </div>`;
-          return;
-        }
-
-        filteredData.forEach((item) => {
-          const isSah = item.status === "Sah";
-          const badgeClass = isSah
-            ? "bg-blue-100 text-blue-700"
-            : "bg-red-100 text-red-700";
-
-          container.innerHTML += `
-                    <div onclick="openDetail('${item.id}')" class="bg-white border border-slate-100 p-4 rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95">
-                        <div class="flex justify-between items-start mb-2">
-                            <div class="flex-1 min-w-0 pr-3">
-                                <h4 class="font-bold text-sm text-slate-800 truncate">${item.nama}</h4>
-                                <p class="text-[11px] text-slate-400 mt-0.5 truncate"><i class="ph-fill ph-map-pin"></i> ${item.alamat}</p>
-                            </div>
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeClass} flex-shrink-0">${item.status}</span>
-                        </div>
-                        <div class="flex justify-between items-end mt-3 pt-3 border-t border-slate-50">
-                            <div>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">Alat</p>
-                                <p class="text-xs font-semibold text-slate-700 mt-0.5">${item.jenis}</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">Tanggal</p>
-                                <p class="text-xs font-semibold text-slate-700 mt-0.5">${item.tanggal}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-        });
-      }
-
-      // ================= INTERAKSI & NAVIGASI =================
-      function switchTab(tabId) {
-        // Sembunyikan semua halaman
-        document
-          .querySelectorAll(".page")
-          .forEach((page) => page.classList.remove("active"));
-        // Tampilkan halaman tujuan
-        document.getElementById(`page-${tabId}`).classList.add("active");
-
-        // Update Navigasi UI
-        document.querySelectorAll(".nav-btn").forEach((btn) => {
-          btn.classList.remove("active-nav");
-          const icon = btn.querySelector("i");
-          const text = btn.querySelector("span");
-          if (btn.dataset.target !== "input") {
-            if (icon) {
-              icon.classList.remove("text-blue-600", "ph-fill");
-              icon.classList.add("text-slate-400", "ph");
-            }
-            if (text) text.classList.remove("text-blue-600", "font-bold");
-          }
-        });
-
-        // Set active khusus tab bawah
-        const activeBtn = document.querySelector(
-          `.nav-btn[data-target="${tabId}"]`,
-        );
-        if (activeBtn && tabId !== "input") {
-          activeBtn.classList.add("active-nav");
-          const activeIcon = activeBtn.querySelector("i");
-          const activeText = activeBtn.querySelector("span");
-          if (activeIcon) {
-            activeIcon.classList.remove("text-slate-400", "ph");
-            activeIcon.classList.add("text-blue-600", "ph-fill");
-          }
-          if (activeText)
-            activeText.classList.add("text-blue-600", "font-bold");
-        }
-      }
-
-      // Fitur Filter Data
-      document.querySelectorAll(".filter-btn").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          document.querySelectorAll(".filter-btn").forEach((b) => {
-            b.classList.remove("bg-slate-800", "text-white", "active");
-            b.classList.add("bg-white", "text-slate-600", "border-slate-200");
-          });
-
-          const target = e.target;
-          target.classList.remove(
-            "bg-white",
-            "text-slate-600",
-            "border-slate-200",
-          );
-          target.classList.add("bg-slate-800", "text-white", "active");
-
-          currentFilter = target.getAttribute("data-filter");
-          renderDataList();
-        });
-      });
-
-      // Fitur Pencarian Data
-      document
-        .getElementById("search-input")
-        .addEventListener("input", renderDataList);
-
-      // ================= PROFIL & SETTINGS (LOCAL STORAGE) =================
-      function loadProfile() {
+      // ================= FUNGSI PROFIL & HARDWARE (DI-EKSPOR KE WINDOW AGAR BISA DIPANGGIL UI) =================
+      window.loadProfile = function () {
         const savedProfil = JSON.parse(localStorage.getItem("teraProfile"));
         if (savedProfil) {
           document.getElementById("profil-nama").innerText = savedProfil.nama;
@@ -1193,88 +1070,13 @@
           document.getElementById("home-nama-petugas").innerText =
             savedProfil.nama;
         }
-      }
-
-      function openEditProfile() {
-        document.getElementById("edit-nama").value =
-          document.getElementById("profil-nama").innerText;
-        document.getElementById("edit-jabatan").value =
-          document.getElementById("profil-jabatan").innerText;
-        document.getElementById("edit-nip").value =
-          document.getElementById("profil-nip").innerText;
-        document.getElementById("modal-edit-profil").classList.remove("hidden");
-        document.getElementById("modal-edit-profil").classList.add("flex");
-      }
-
-      function saveProfile() {
-        const dataProfile = {
-          nama: document.getElementById("edit-nama").value,
-          jabatan: document.getElementById("edit-jabatan").value,
-          nip: document.getElementById("edit-nip").value,
-        };
-
-        localStorage.setItem("teraProfile", JSON.stringify(dataProfile));
-        loadProfile();
-        closeModal("modal-edit-profil");
-        alertCustom("Profil berhasil diperbarui");
-      }
-
-      // ================= MODAL & HARDWARE SIMULATION =================
-      window.openDetail = function (id) {
-        const item = globalTeraData.find((d) => d.id === id);
-        if (!item) return;
-
-        currentDetailId = id;
-        document.getElementById("det-tanggal").innerText = item.tanggal;
-        document.getElementById("det-id").innerText = item.id
-          .substring(0, 8)
-          .toUpperCase();
-        document.getElementById("det-nama").innerText = item.nama;
-        document.getElementById("det-alamat").innerText = item.alamat;
-        document.getElementById("det-gps").innerText = item.gps;
-        document.getElementById("det-jenis").innerText = item.jenis;
-        document.getElementById("det-merek").innerText = item.merek;
-        document.getElementById("det-kapasitas").innerText = item.kapasitas;
-        document.getElementById("det-retribusi").innerText = formatRupiah(
-          item.retribusi,
-        );
-
-        const badge = document.getElementById("det-badge");
-        badge.innerText = item.status;
-        if (item.status === "Sah") {
-          badge.className =
-            "px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700";
-        } else {
-          badge.className =
-            "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
-        }
-
-        document.getElementById("modal-detail").classList.remove("hidden");
-        document.getElementById("modal-detail").classList.add("flex");
       };
 
-      function closeModal(modalId) {
-        document.getElementById(modalId).classList.add("hidden");
-        document.getElementById(modalId).classList.remove("flex");
-      }
-
-      function alertCustom(msg) {
-        const toast = document.getElementById("toast");
-        toast.innerText = msg;
-        toast.classList.remove("opacity-0", "-translate-y-4");
-        toast.classList.add("opacity-100", "translate-y-0");
-
-        setTimeout(() => {
-          toast.classList.remove("opacity-100", "translate-y-0");
-          toast.classList.add("opacity-0", "-translate-y-4");
-        }, 3000);
-      }
-
-      function getGPSLocation() {
+      window.getGPSLocation = function () {
         const btn = document.getElementById("input-gps");
         btn.value = "Mencari lokasi...";
 
-        // Jembatan untuk Kodular (Jika diwrap di Kodular)
+        // Kodular Extension Bridge
         if (window.AppInventor && window.AppInventor.setWebViewString) {
           window.AppInventor.setWebViewString(
             JSON.stringify({ action: "GET_LOCATION" }),
@@ -1298,9 +1100,9 @@
             btn.value = "-4.0034, 122.5076 (Simulasi)";
           }
         }, 1000);
-      }
+      };
 
-      function connectPrinter() {
+      window.connectPrinter = function () {
         if (window.AppInventor && window.AppInventor.setWebViewString) {
           window.AppInventor.setWebViewString(
             JSON.stringify({ action: "CONNECT_PRINTER" }),
@@ -1309,16 +1111,13 @@
         } else {
           alertCustom("Fitur ini aktif jika dibungkus dengan Kodular");
         }
-      }
+      };
 
-      function printSKHP() {
+      window.printSKHP = function () {
         const item = globalTeraData.find((d) => d.id === currentDetailId);
         if (!item) return;
 
-        const printData = {
-          action: "PRINT_SKHP",
-          data: item,
-        };
+        const printData = { action: "PRINT_SKHP", data: item };
 
         if (window.AppInventor && window.AppInventor.setWebViewString) {
           window.AppInventor.setWebViewString(JSON.stringify(printData));
@@ -1328,13 +1127,260 @@
             `Simulasi Cetak:\nNama: ${item.nama}\nAlat: ${item.jenis}\nStatus: ${item.status}`,
           );
         }
+      };
+
+      window.deleteCurrentData = async function () {
+        if (!currentUserUid || !currentDetailId) return;
+        // Ganti confirm browser asli (kadang diblock Kodular) dengan logic custom bila diperlukan.
+        // Untuk sekarang gunakan standard.
+        if (confirm("Yakin ingin menghapus data ini dari Cloud?")) {
+          try {
+            const docRef = doc(
+              db,
+              "artifacts",
+              appId,
+              "users",
+              currentUserUid,
+              "tera_data",
+              currentDetailId,
+            );
+            await deleteDoc(docRef);
+            closeModal("modal-detail");
+            alertCustom("Data berhasil dihapus");
+          } catch (error) {
+            alertCustom("Gagal menghapus data");
+          }
+        }
+      };
+
+      // ================= AUTHENTICATION =================
+      async function initAuth() {
+        try {
+          if (
+            typeof __initial_auth_token !== "undefined" &&
+            __initial_auth_token
+          ) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+        } catch (error) {
+          console.error("Auth Error:", error);
+          alertCustom("Mode Offline / Gagal ke Server");
+        }
       }
 
-      // Initialize App
-      window.onload = () => {
-        loadProfile();
-        initAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentUserUid = user.uid;
+          listenToFirestore();
+        }
+      });
+
+      // ================= FIREBASE CRUD LOGIC =================
+      function listenToFirestore() {
+        if (!currentUserUid) return;
+
+        const dataRef = collection(
+          db,
+          "artifacts",
+          appId,
+          "users",
+          currentUserUid,
+          "tera_data",
+        );
+        onSnapshot(
+          dataRef,
+          (snapshot) => {
+            globalTeraData = [];
+            snapshot.forEach((doc) => {
+              globalTeraData.push({ id: doc.id, ...doc.data() });
+            });
+            globalTeraData.sort((a, b) => b.timestamp - a.timestamp);
+            updateUI();
+          },
+          (error) => {
+            console.error("Error fetching data:", error);
+          },
+        );
+      }
+
+      document
+        .getElementById("form-tera")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (!currentUserUid) {
+            alertCustom("Belum terhubung ke server");
+            return;
+          }
+
+          const simpanBtn = e.target.querySelector('button[type="submit"]');
+          const originalText = simpanBtn.innerHTML;
+          simpanBtn.innerHTML =
+            '<i class="ph-bold ph-spinner animate-spin"></i> Menyimpan...';
+          simpanBtn.disabled = true;
+
+          const radioStatus = document.querySelector(
+            'input[name="status-tera"]:checked',
+          );
+
+          const newData = {
+            nama: document.getElementById("input-nama").value,
+            alamat: document.getElementById("input-alamat").value || "-",
+            gps: document.getElementById("input-gps").value || "-",
+            jenis: document.getElementById("input-jenis").value,
+            merek: document.getElementById("input-merek").value || "-",
+            kapasitas: document.getElementById("input-kapasitas").value || "-",
+            retribusi:
+              parseInt(document.getElementById("input-retribusi").value) || 0,
+            status: radioStatus ? radioStatus.value : "Sah",
+            tanggal: new Date().toLocaleDateString("id-ID", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            }),
+            timestamp: Date.now(),
+          };
+
+          try {
+            const dataRef = collection(
+              db,
+              "artifacts",
+              appId,
+              "users",
+              currentUserUid,
+              "tera_data",
+            );
+            await addDoc(dataRef, newData);
+            alertCustom("Data berhasil disimpan!");
+            e.target.reset();
+            document.getElementById("input-retribusi").value = "0";
+            setTimeout(() => switchTab("data"), 500);
+          } catch (error) {
+            alertCustom("Gagal menyimpan data");
+          } finally {
+            simpanBtn.innerHTML = originalText;
+            simpanBtn.disabled = false;
+          }
+        });
+
+      // ================= UI UPDATE LOGIC (DIPANGGIL DARI FIREBASE) =================
+      function updateUI() {
+        renderBeranda();
+        window.renderDataList();
+      }
+
+      function renderBeranda() {
+        const elStatTotal = document.getElementById("stat-total");
+        const elStatSah = document.getElementById("stat-sah");
+        if (elStatTotal) elStatTotal.innerText = globalTeraData.length;
+
+        const sahCount = globalTeraData.filter(
+          (d) => d.status === "Sah",
+        ).length;
+        if (elStatSah) elStatSah.innerText = sahCount;
+
+        const recentContainer = document.getElementById("home-recent-list");
+        if (!recentContainer) return;
+
+        recentContainer.innerHTML = "";
+
+        if (globalTeraData.length === 0) {
+          recentContainer.innerHTML =
+            '<div class="text-center py-6 text-slate-400 text-sm">Belum ada data pengujian.</div>';
+          return;
+        }
+
+        const recentData = globalTeraData.slice(0, 3);
+        recentData.forEach((item) => {
+          const icon =
+            item.status === "Sah"
+              ? "ph-check-circle text-blue-500"
+              : "ph-x-circle text-red-500";
+          const bg = item.status === "Sah" ? "bg-blue-50" : "bg-red-50";
+
+          recentContainer.innerHTML += `
+            <div onclick="openDetail('${item.id}')" class="bg-white border border-slate-100 p-3 rounded-xl flex items-center gap-3 shadow-sm active-scale transition-all cursor-pointer">
+                <div class="w-10 h-10 ${bg} rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="ph-fill ${icon} text-2xl"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-bold text-sm text-slate-800 truncate">${item.nama}</h4>
+                    <p class="text-xs text-slate-400 truncate">${item.jenis}</p>
+                </div>
+                <div class="text-right flex-shrink-0">
+                    <p class="text-xs font-bold text-slate-700">${item.tanggal}</p>
+                </div>
+            </div>
+          `;
+        });
+      }
+
+      window.renderDataList = function () {
+        const container = document.getElementById("data-list-container");
+        const searchInput = document.getElementById("search-input");
+        if (!container) return;
+
+        const searchQuery = searchInput ? searchInput.value.toLowerCase() : "";
+        container.innerHTML = "";
+
+        let filteredData = globalTeraData;
+
+        if (currentFilter !== "Semua") {
+          filteredData = filteredData.filter(
+            (item) => item.status === currentFilter,
+          );
+        }
+        if (searchQuery) {
+          filteredData = filteredData.filter((item) =>
+            item.nama.toLowerCase().includes(searchQuery),
+          );
+        }
+
+        if (filteredData.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-10">
+                <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="ph-fill ph-magnifying-glass text-2xl text-slate-400"></i>
+                </div>
+                <p class="text-slate-500 text-sm font-medium">Tidak ada data ditemukan</p>
+            </div>`;
+          return;
+        }
+
+        filteredData.forEach((item) => {
+          const isSah = item.status === "Sah";
+          const badgeClass = isSah
+            ? "bg-blue-100 text-blue-700"
+            : "bg-red-100 text-red-700";
+
+          container.innerHTML += `
+            <div onclick="openDetail('${item.id}')" class="bg-white border border-slate-100 p-4 rounded-xl shadow-sm active-scale transition-all cursor-pointer">
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex-1 min-w-0 pr-3">
+                        <h4 class="font-bold text-sm text-slate-800 truncate">${item.nama}</h4>
+                        <p class="text-[11px] text-slate-400 mt-0.5 truncate"><i class="ph-fill ph-map-pin"></i> ${item.alamat}</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeClass} flex-shrink-0">${item.status}</span>
+                </div>
+                <div class="flex justify-between items-end mt-3 pt-3 border-t border-slate-50">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Alat</p>
+                        <p class="text-xs font-semibold text-slate-700 mt-0.5">${item.jenis}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Tanggal</p>
+                        <p class="text-xs font-semibold text-slate-700 mt-0.5">${item.tanggal}</p>
+                    </div>
+                </div>
+            </div>
+          `;
+        });
       };
+
+      // Jalankan ketika halaman diload
+      window.loadProfile();
+      initAuth();
     </script>
   </body>
 </html>
