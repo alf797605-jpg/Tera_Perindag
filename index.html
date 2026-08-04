@@ -129,10 +129,10 @@
               </h1>
               <p class="text-blue-200 text-xs mt-1">Dinas Perindag</p>
             </div>
-            <!-- Tombol Notifikasi (Event Listener: notif) -->
+            <!-- Tombol Notifikasi (Menggunakan onclick langsung) -->
             <div
-              class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/30 btn-interact"
-              data-action="notif"
+              class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/30 cursor-pointer active-scale"
+              onclick="handleUIAction('notif')"
             >
               <i class="ph ph-bell text-white text-2xl pointer-events-none"></i>
               <div
@@ -180,8 +180,8 @@
                 Aktivitas Terakhir
               </h3>
               <button
-                class="nav-btn text-blue-600 text-xs font-bold active-scale"
-                data-target="data"
+                class="text-blue-600 text-xs font-bold active-scale cursor-pointer"
+                onclick="switchTab('data')"
               >
                 Lihat Semua
               </button>
@@ -208,6 +208,7 @@
             <input
               type="text"
               id="search-input"
+              oninput="handleSearch()"
               placeholder="Cari nama pemilik / usaha..."
               class="w-full bg-slate-100 text-slate-700 text-sm rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
@@ -216,20 +217,20 @@
           <!-- Fitur Filter -->
           <div class="flex gap-2 overflow-x-auto pb-2" id="filter-container">
             <button
-              class="filter-btn active whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-white transition-colors"
-              data-filter="Semua"
+              onclick="setFilter(this, 'Semua')"
+              class="filter-btn active whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-white transition-colors cursor-pointer"
             >
               Semua
             </button>
             <button
-              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-colors"
-              data-filter="Sah"
+              onclick="setFilter(this, 'Sah')"
+              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-colors cursor-pointer"
             >
               Hanya Sah
             </button>
             <button
-              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-colors"
-              data-filter="Batal"
+              onclick="setFilter(this, 'Batal')"
+              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-colors cursor-pointer"
             >
               Hanya Batal
             </button>
@@ -253,7 +254,11 @@
           </p>
         </div>
 
-        <form id="form-tera" class="flex-1 overflow-y-auto p-5 pb-32 space-y-5">
+        <form
+          id="form-tera"
+          onsubmit="window.handleFormSubmit(event)"
+          class="flex-1 overflow-y-auto p-5 pb-32 space-y-5"
+        >
           <!-- Info Pemilik -->
           <div class="space-y-4">
             <h2 class="text-sm font-bold text-blue-600 flex items-center gap-2">
@@ -295,8 +300,8 @@
                 />
                 <button
                   type="button"
-                  class="bg-blue-100 text-blue-600 px-4 rounded-xl font-bold active-scale flex items-center justify-center btn-interact"
-                  data-action="gps"
+                  onclick="handleUIAction('gps')"
+                  class="bg-blue-100 text-blue-600 px-4 rounded-xl font-bold active-scale flex items-center justify-center cursor-pointer"
                 >
                   <i
                     class="ph-bold ph-crosshair text-lg pointer-events-none"
@@ -308,7 +313,7 @@
 
           <hr class="border-slate-100" />
 
-          <!-- Info Alat UTTP (Diperluas) -->
+          <!-- Info Alat UTTP -->
           <div class="space-y-4">
             <h2 class="text-sm font-bold text-blue-600 flex items-center gap-2">
               <i class="ph-fill ph-scales"></i> Data Alat (UTTP)
@@ -452,7 +457,8 @@
           <div class="pt-2 pb-10">
             <button
               type="submit"
-              class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 active-scale transition-transform flex items-center justify-center gap-2"
+              id="btn-simpan"
+              class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 active-scale transition-transform flex items-center justify-center gap-2 cursor-pointer"
             >
               <i class="ph-bold ph-floppy-disk"></i> Simpan Data Tera
             </button>
@@ -471,8 +477,8 @@
             class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative"
           >
             <button
-              class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-600 active-scale btn-interact"
-              data-action="editProfile"
+              onclick="handleUIAction('editProfile')"
+              class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-600 active-scale cursor-pointer"
             >
               <i
                 class="ph-bold ph-pencil-simple text-sm pointer-events-none"
@@ -506,8 +512,8 @@
             class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
           >
             <button
-              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group btn-interact"
-              data-action="connectPrinter"
+              onclick="handleUIAction('connectPrinter')"
+              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group cursor-pointer"
             >
               <div class="flex items-center gap-3 pointer-events-none">
                 <div
@@ -529,8 +535,8 @@
               ></i>
             </button>
             <button
-              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group btn-interact"
-              data-action="syncInfo"
+              onclick="handleUIAction('syncInfo')"
+              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group cursor-pointer"
             >
               <div class="flex items-center gap-3 pointer-events-none">
                 <div
@@ -552,8 +558,8 @@
               ></i>
             </button>
             <button
-              class="w-full p-4 flex items-center justify-between active:bg-red-50 transition-colors group btn-interact"
-              data-action="logout"
+              onclick="handleUIAction('logout')"
+              class="w-full p-4 flex items-center justify-between active:bg-red-50 transition-colors group cursor-pointer"
             >
               <div class="flex items-center gap-3 pointer-events-none">
                 <div
@@ -570,7 +576,7 @@
 
           <div class="text-center pb-10">
             <p class="text-xs text-slate-400 font-medium">
-              Aplikasi Tera Perindag v2.1.0
+              Aplikasi Tera Perindag v2.2.0
             </p>
             <p class="text-[10px] text-slate-400 mt-1">
               &copy; 2026 Dinas Perindag
@@ -580,25 +586,26 @@
       </div>
 
       <!-- ================= BOTTOM NAVIGATION ================= -->
-      <!-- DIBUAT TANPA ONCLICK: Agar berjalan lancar saat dibungkus Kodular WebViewer -->
       <div
         class="absolute bottom-0 w-full bg-white/90 backdrop-blur-md border-t border-slate-100 flex justify-between items-center px-6 py-2 shadow-[0_-5px_15px_-10px_rgba(0,0,0,0.1)] z-50"
       >
         <button
-          class="nav-btn flex flex-col items-center gap-1 p-2 w-16 active-nav"
-          data-target="home"
+          id="nav-btn-home"
+          onclick="switchTab('home')"
+          class="nav-btn-item flex flex-col items-center gap-1 p-2 w-16 active-nav cursor-pointer"
         >
           <i
-            class="ph ph-house text-2xl text-slate-400 transition-colors pointer-events-none"
+            class="ph-fill ph-house text-2xl text-blue-600 transition-colors pointer-events-none"
           ></i>
           <span
-            class="text-[10px] text-slate-400 font-medium transition-colors pointer-events-none"
+            class="text-[10px] text-blue-600 font-bold transition-colors pointer-events-none"
             >Beranda</span
           >
         </button>
         <button
-          class="nav-btn flex flex-col items-center gap-1 p-2 w-16"
-          data-target="data"
+          id="nav-btn-data"
+          onclick="switchTab('data')"
+          class="nav-btn-item flex flex-col items-center gap-1 p-2 w-16 cursor-pointer"
         >
           <i
             class="ph ph-folder text-2xl text-slate-400 transition-colors pointer-events-none"
@@ -611,16 +618,17 @@
 
         <div class="relative -top-6">
           <button
-            class="nav-btn w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 text-white active-scale border-4 border-slate-50"
-            data-target="input"
+            onclick="switchTab('input')"
+            class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 text-white active-scale border-4 border-slate-50 cursor-pointer"
           >
             <i class="ph-bold ph-plus text-2xl pointer-events-none"></i>
           </button>
         </div>
 
         <button
-          class="nav-btn flex flex-col items-center gap-1 p-2 w-16"
-          data-target="profil"
+          id="nav-btn-profil"
+          onclick="switchTab('profil')"
+          class="nav-btn-item flex flex-col items-center gap-1 p-2 w-16 cursor-pointer"
         >
           <i
             class="ph ph-user text-2xl text-slate-400 transition-colors pointer-events-none"
@@ -751,29 +759,28 @@
           </div>
           <div class="flex gap-3 mt-4 flex-shrink-0">
             <button
-              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale btn-interact"
-              data-action="closeModal"
-              data-target="modal-detail"
+              onclick="handleUIAction('closeModal', 'modal-detail')"
+              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale cursor-pointer"
             >
               Tutup
             </button>
             <button
-              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale flex items-center justify-center gap-2 btn-interact"
-              data-action="printSKHP"
+              onclick="handleUIAction('printSKHP')"
+              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale flex items-center justify-center gap-2 cursor-pointer"
             >
               <i class="ph-bold ph-printer pointer-events-none"></i> Cetak SKHP
             </button>
           </div>
           <button
-            class="mt-3 py-2 text-red-500 text-xs font-bold flex items-center justify-center gap-1 active-scale btn-interact"
-            data-action="requestDelete"
+            onclick="handleUIAction('requestDelete')"
+            class="mt-3 py-2 text-red-500 text-xs font-bold flex items-center justify-center gap-1 active-scale cursor-pointer"
           >
             <i class="ph-bold ph-trash pointer-events-none"></i> Hapus Data Ini
           </button>
         </div>
       </div>
 
-      <!-- Modal Custom Confirm Hapus (Menggantikan confirm browser yang dilarang/diblokir HP) -->
+      <!-- Modal Custom Confirm Hapus -->
       <div
         id="modal-confirm"
         class="absolute inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm hidden flex-col justify-center items-center px-4"
@@ -790,14 +797,14 @@
           </p>
           <div class="flex gap-3 mt-6">
             <button
-              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale btn-interact"
-              data-action="cancelDelete"
+              onclick="handleUIAction('cancelDelete')"
+              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale cursor-pointer"
             >
               Batal
             </button>
             <button
-              class="w-full py-3 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md active-scale btn-interact"
-              data-action="executeDelete"
+              onclick="handleUIAction('executeDelete')"
+              class="w-full py-3 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md active-scale cursor-pointer"
             >
               Ya, Hapus
             </button>
@@ -851,15 +858,14 @@
           </div>
           <div class="flex gap-3 mt-6">
             <button
-              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale btn-interact"
-              data-action="closeModal"
-              data-target="modal-edit-profil"
+              onclick="handleUIAction('closeModal', 'modal-edit-profil')"
+              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale cursor-pointer"
             >
               Batal
             </button>
             <button
-              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale btn-interact"
-              data-action="saveProfile"
+              onclick="handleUIAction('saveProfile')"
+              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale cursor-pointer"
             >
               Simpan
             </button>
@@ -870,20 +876,20 @@
       <!-- Custom Toast Alert -->
       <div
         id="toast"
-        class="absolute top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg z-[90] transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4"
+        class="absolute top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg z-[90] transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4 whitespace-nowrap"
       >
         Pesan notifikasi
       </div>
     </div>
 
-    <!-- SCRIPT UI INI DITARUH TERPISAH AGAR TIDAK DIBLOK OLEH FIREBASE JIKA TERJADI ERROR KONEKSI -->
+    <!-- SCRIPT UI GLOBAL AGAR KOMPATIBEL DENGAN KODULAR (ONCLICK) -->
     <script>
       let globalTeraData = [];
       let currentDetailId = null;
       let currentFilter = "Semua";
 
-      // Fungsi Navigasi Tab (Berjalan mulus di Kodular)
-      function switchTab(tabId) {
+      // Pindah Halaman Tab
+      window.switchTab = function (tabId) {
         document.querySelectorAll(".page").forEach((page) => {
           page.style.display = "none";
           page.classList.remove("active");
@@ -895,45 +901,41 @@
           targetPage.classList.add("active");
         }
 
-        // Update Indikator Tab Bawah
-        document.querySelectorAll(".nav-btn").forEach((btn) => {
+        // Update indikator warna pada menu bawah
+        document.querySelectorAll(".nav-btn-item").forEach((btn) => {
           btn.classList.remove("active-nav");
           const icon = btn.querySelector("i");
           const text = btn.querySelector("span");
-          if (btn.dataset.target !== "input") {
-            if (icon) {
-              icon.classList.remove("text-blue-600", "ph-fill");
-              icon.classList.add("text-slate-400", "ph");
-            }
-            if (text) text.classList.remove("text-blue-600", "font-bold");
+
+          if (icon && text) {
+            // Reset ke warna abu-abu
+            icon.classList.remove("text-blue-600", "ph-fill");
+            icon.classList.add("text-slate-400", "ph");
+            text.classList.remove("text-blue-600", "font-bold");
+            text.classList.add("text-slate-400", "font-medium");
           }
         });
 
-        const activeBtn = document.querySelector(
-          `.nav-btn[data-target="${tabId}"]`,
-        );
-        if (activeBtn && tabId !== "input") {
-          activeBtn.classList.add("active-nav");
-          const activeIcon = activeBtn.querySelector("i");
-          const activeText = activeBtn.querySelector("span");
-          if (activeIcon) {
-            activeIcon.classList.remove("text-slate-400", "ph");
-            activeIcon.classList.add("text-blue-600", "ph-fill");
+        // Setel warna biru ke tab yang aktif (kecuali tab input)
+        if (tabId !== "input") {
+          const activeBtn = document.getElementById(`nav-btn-${tabId}`);
+          if (activeBtn) {
+            activeBtn.classList.add("active-nav");
+            const activeIcon = activeBtn.querySelector("i");
+            const activeText = activeBtn.querySelector("span");
+
+            if (activeIcon && activeText) {
+              activeIcon.classList.remove("text-slate-400", "ph");
+              activeIcon.classList.add("text-blue-600", "ph-fill");
+              activeText.classList.remove("text-slate-400", "font-medium");
+              activeText.classList.add("text-blue-600", "font-bold");
+            }
           }
-          if (activeText)
-            activeText.classList.add("text-blue-600", "font-bold");
         }
-      }
+      };
 
-      function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
-        }
-      }
-
-      function alertCustom(msg) {
+      // Tampilkan Notifikasi Toast
+      window.alertCustom = function (msg) {
         const toast = document.getElementById("toast");
         if (!toast) return;
         toast.innerText = msg;
@@ -943,17 +945,40 @@
           toast.classList.remove("opacity-100", "translate-y-0");
           toast.classList.add("opacity-0", "-translate-y-4");
         }, 3000);
-      }
+      };
 
-      function formatRupiah(angka) {
+      // Setel Filter Pencarian
+      window.setFilter = function (btnElement, filterValue) {
+        document.querySelectorAll(".filter-btn").forEach((b) => {
+          b.classList.remove("bg-slate-800", "text-white", "active");
+          b.classList.add("bg-white", "text-slate-600", "border-slate-200");
+        });
+        btnElement.classList.remove(
+          "bg-white",
+          "text-slate-600",
+          "border-slate-200",
+        );
+        btnElement.classList.add("bg-slate-800", "text-white", "active");
+
+        currentFilter = filterValue;
+        if (window.renderDataList) window.renderDataList();
+      };
+
+      // Handle Input Pencarian Text
+      window.handleSearch = function () {
+        if (window.renderDataList) window.renderDataList();
+      };
+
+      // Format Angka Rupiah
+      window.formatRupiah = function (angka) {
         return new Intl.NumberFormat("id-ID", {
           style: "currency",
           currency: "IDR",
           minimumFractionDigits: 0,
         }).format(angka);
-      }
+      };
 
-      // Fungsi Buka Detail Modal saat item di-klik
+      // Buka Detail Item
       window.openDetail = function (id) {
         const item = globalTeraData.find((d) => d.id === id);
         if (!item) return;
@@ -969,9 +994,8 @@
         document.getElementById("det-merek").innerText = item.merek || "-";
         document.getElementById("det-kapasitas").innerText =
           item.kapasitas || "-";
-        document.getElementById("det-retribusi").innerText = formatRupiah(
-          item.retribusi || 0,
-        );
+        document.getElementById("det-retribusi").innerText =
+          window.formatRupiah(item.retribusi || 0);
 
         const badge = document.getElementById("det-badge");
         badge.innerText = item.status || "Sah";
@@ -988,99 +1012,58 @@
         modal.classList.add("flex");
       };
 
-      // ==== PENGIKATAN EVENT (EVENT BINDING) UNTUK KODULAR ====
-      document.addEventListener("DOMContentLoaded", () => {
-        // 1. Menu Bawah Navigasi
-        document.querySelectorAll(".nav-btn").forEach((btn) => {
-          btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const target = this.getAttribute("data-target");
-            if (target) switchTab(target);
-          });
-        });
+      // Pusat Handler Aksi UI
+      window.handleUIAction = function (action, targetId) {
+        if (action === "closeModal") {
+          const modal = document.getElementById(targetId);
+          if (modal) {
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+          }
+        } else if (action === "editProfile") {
+          document.getElementById("edit-nama").value =
+            document.getElementById("profil-nama").innerText;
+          document.getElementById("edit-jabatan").value =
+            document.getElementById("profil-jabatan").innerText;
+          document.getElementById("edit-nip").value =
+            document.getElementById("profil-nip").innerText;
 
-        // 2. Tombol Filter Status (Semua / Sah / Batal)
-        document.querySelectorAll(".filter-btn").forEach((btn) => {
-          btn.addEventListener("click", (e) => {
-            document.querySelectorAll(".filter-btn").forEach((b) => {
-              b.classList.remove("bg-slate-800", "text-white", "active");
-              b.classList.add("bg-white", "text-slate-600", "border-slate-200");
-            });
-            const target = e.currentTarget;
-            target.classList.remove(
-              "bg-white",
-              "text-slate-600",
-              "border-slate-200",
-            );
-            target.classList.add("bg-slate-800", "text-white", "active");
-            currentFilter = target.getAttribute("data-filter");
-            if (window.renderDataList) window.renderDataList();
-          });
-        });
-
-        // 3. Input Pencarian
-        const searchInput = document.getElementById("search-input");
-        if (searchInput) {
-          searchInput.addEventListener("input", () => {
-            if (window.renderDataList) window.renderDataList();
-          });
+          const modalEdit = document.getElementById("modal-edit-profil");
+          modalEdit.classList.remove("hidden");
+          modalEdit.classList.add("flex");
+        } else if (action === "saveProfile") {
+          const dataProfile = {
+            nama: document.getElementById("edit-nama").value,
+            jabatan: document.getElementById("edit-jabatan").value,
+            nip: document.getElementById("edit-nip").value,
+          };
+          localStorage.setItem("teraProfile", JSON.stringify(dataProfile));
+          if (window.loadProfile) window.loadProfile();
+          window.handleUIAction("closeModal", "modal-edit-profil");
+          window.alertCustom("Profil berhasil diperbarui");
+        } else if (action === "notif") {
+          window.alertCustom("Belum ada notifikasi baru");
+        } else if (action === "syncInfo") {
+          window.alertCustom("Tersambung ke Cloud Firestore");
+        } else if (action === "logout") {
+          window.alertCustom("Terkunci dalam mode Online Anonymous.");
+        } else if (action === "gps") {
+          if (window.getGPSLocation) window.getGPSLocation();
+        } else if (action === "connectPrinter") {
+          if (window.connectPrinter) window.connectPrinter();
+        } else if (action === "printSKHP") {
+          if (window.printSKHP) window.printSKHP();
+        } else if (action === "requestDelete") {
+          const confirmModal = document.getElementById("modal-confirm");
+          confirmModal.classList.remove("hidden");
+          confirmModal.classList.add("flex");
+        } else if (action === "cancelDelete") {
+          window.handleUIAction("closeModal", "modal-confirm");
+        } else if (action === "executeDelete") {
+          if (window.deleteCurrentData) window.deleteCurrentData();
+          window.handleUIAction("closeModal", "modal-confirm");
         }
-
-        // 4. Pengikatan Logika Aksi-Aksi Tombol Interaktif
-        document.querySelectorAll(".btn-interact").forEach((btn) => {
-          btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const action = this.getAttribute("data-action");
-
-            if (action === "closeModal") {
-              closeModal(this.getAttribute("data-target"));
-            } else if (action === "editProfile") {
-              document.getElementById("edit-nama").value =
-                document.getElementById("profil-nama").innerText;
-              document.getElementById("edit-jabatan").value =
-                document.getElementById("profil-jabatan").innerText;
-              document.getElementById("edit-nip").value =
-                document.getElementById("profil-nip").innerText;
-              const modalEdit = document.getElementById("modal-edit-profil");
-              modalEdit.classList.remove("hidden");
-              modalEdit.classList.add("flex");
-            } else if (action === "saveProfile") {
-              const dataProfile = {
-                nama: document.getElementById("edit-nama").value,
-                jabatan: document.getElementById("edit-jabatan").value,
-                nip: document.getElementById("edit-nip").value,
-              };
-              localStorage.setItem("teraProfile", JSON.stringify(dataProfile));
-              if (window.loadProfile) window.loadProfile();
-              closeModal("modal-edit-profil");
-              alertCustom("Profil berhasil diperbarui");
-            } else if (action === "notif") {
-              alertCustom("Belum ada notifikasi baru");
-            } else if (action === "syncInfo") {
-              alertCustom("Sinkronisasi berjalan otomatis melalui Firebase.");
-            } else if (action === "logout") {
-              alertCustom("Aplikasi dalam mode simulasi, Anda sudah keluar.");
-            } else if (action === "gps") {
-              if (window.getGPSLocation) window.getGPSLocation();
-            } else if (action === "connectPrinter") {
-              if (window.connectPrinter) window.connectPrinter();
-            } else if (action === "printSKHP") {
-              if (window.printSKHP) window.printSKHP();
-            } else if (action === "requestDelete") {
-              // Munculkan konfirmasi hapus khusus
-              document
-                .getElementById("modal-confirm")
-                .classList.remove("hidden");
-              document.getElementById("modal-confirm").classList.add("flex");
-            } else if (action === "cancelDelete") {
-              closeModal("modal-confirm");
-            } else if (action === "executeDelete") {
-              if (window.deleteCurrentData) window.deleteCurrentData();
-              closeModal("modal-confirm");
-            }
-          });
-        });
-      });
+      };
     </script>
 
     <!-- ================= JAVASCRIPT & FIREBASE ================= -->
@@ -1100,16 +1083,15 @@
         doc,
       } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-      // =========================================================================
-      // ⚠️ GANTI KONFIGURASI DI BAWAH INI DENGAN FIREBASE MILIK ANDA SENDIRI ⚠️
-      // =========================================================================
+      // Konfigurasi Asli Firebase Anda
       const firebaseConfig = {
-        apiKey: "mock-key",
-        authDomain: "mock-domain.firebaseapp.com",
-        projectId: "mock-project",
-        storageBucket: "mock-bucket.appspot.com",
-        messagingSenderId: "123",
-        appId: "1:123:web:456",
+        apiKey: "AIzaSyAHj8wfsq2t_H-nE0WsurNL-R_CN2Br9w",
+        authDomain: "aplikasi-tera-perindag.firebaseapp.com",
+        projectId: "aplikasi-tera-perindag",
+        storageBucket: "aplikasi-tera-perindag.firebasestorage.app",
+        messagingSenderId: "976799307229",
+        appId: "1:976799307229:web:bc4ea6059b5e62ef445234",
+        measurementId: "G-REJG96N7K",
       };
 
       // ID Aplikasi untuk folder database
@@ -1121,24 +1103,27 @@
         app = initializeApp(firebaseConfig);
         auth = getAuth(app);
         db = getFirestore(app);
+        console.log("Firebase Berhasil Terhubung!");
       } catch (e) {
-        console.log(
-          "Menjalankan dalam mode pratinjau (Database Firebase belum disambungkan)",
-        );
+        console.error("Gagal koneksi Firebase", e);
       }
 
       let currentUserUid = null;
 
-      // ================= EXPORT FUNGSI KE WINDOW UNTUK UI =================
+      // ================= EXPORT FUNGSI KE WINDOW =================
       window.loadProfile = function () {
         const savedProfil = JSON.parse(localStorage.getItem("teraProfile"));
         if (savedProfil) {
-          document.getElementById("profil-nama").innerText = savedProfil.nama;
-          document.getElementById("profil-jabatan").innerText =
-            savedProfil.jabatan;
-          document.getElementById("profil-nip").innerText = savedProfil.nip;
-          document.getElementById("home-nama-petugas").innerText =
-            savedProfil.nama;
+          const profileNamaEl = document.getElementById("profil-nama");
+          const profileJabatanEl = document.getElementById("profil-jabatan");
+          const profileNipEl = document.getElementById("profil-nip");
+          const homeNamaEl = document.getElementById("home-nama-petugas");
+
+          if (profileNamaEl) profileNamaEl.innerText = savedProfil.nama;
+          if (profileJabatanEl)
+            profileJabatanEl.innerText = savedProfil.jabatan;
+          if (profileNipEl) profileNipEl.innerText = savedProfil.nip;
+          if (homeNamaEl) homeNamaEl.innerText = savedProfil.nama;
         }
       };
 
@@ -1155,14 +1140,14 @@
             navigator.geolocation.getCurrentPosition(
               (position) => {
                 btn.value = `${position.coords.latitude.toFixed(5)}, ${position.coords.longitude.toFixed(5)}`;
-                document.getElementById("toast").innerText = "Lokasi ditemukan"; // Custom Toast direct call
+                window.alertCustom("Lokasi ditemukan");
               },
               (error) => {
-                btn.value = "-4.0034, 122.5076 (Data Simulasi)";
+                btn.value = "-4.0034, 122.5076 (Simulasi GPS)";
               },
             );
           } else {
-            btn.value = "-4.0034, 122.5076 (Data Simulasi)";
+            btn.value = "-4.0034, 122.5076 (Simulasi GPS)";
           }
         }, 1000);
       };
@@ -1173,7 +1158,7 @@
             JSON.stringify({ action: "CONNECT_PRINTER" }),
           );
         } else {
-          alert("Gunakan Kodular untuk menghubungkan Bluetooth"); // Alert native sebagai fallback info saja
+          alert("Gunakan Aplikasi Kodular untuk menghubungkan Bluetooth");
         }
       };
 
@@ -1185,12 +1170,11 @@
             JSON.stringify({ action: "PRINT_SKHP", data: item }),
           );
         } else {
-          document.getElementById("toast").innerText =
-            "Simulasi Print SKHP Dikirim..."; // Custom Toast direct call
+          window.alertCustom("Permintaan Print SKHP Terkirim");
         }
       };
 
-      // FUNGSI HAPUS (Kini dipanggil lewat pop-up confirm buatan sendiri)
+      // Fungsi Hapus dari Firebase Database
       window.deleteCurrentData = async function () {
         if (!currentUserUid || !currentDetailId) return;
         try {
@@ -1204,11 +1188,12 @@
             currentDetailId,
           );
           await deleteDoc(docRef);
-          document.getElementById("modal-detail").classList.add("hidden");
-          document.getElementById("modal-detail").classList.remove("flex");
-          document.getElementById("toast").innerText = "Data Dihapus."; // Custom Toast direct call
+
+          window.handleUIAction("closeModal", "modal-detail");
+          window.alertCustom("Data berhasil dihapus dari Cloud");
         } catch (error) {
-          console.log("Penghapusan Firebase simulasi");
+          console.error("Gagal menghapus data", error);
+          window.alertCustom("Gagal menghapus data");
         }
       };
 
@@ -1218,7 +1203,7 @@
         try {
           await signInAnonymously(auth);
         } catch (error) {
-          console.error("Gagal terhubung ke Cloud");
+          console.error("Gagal autentikasi anonim", error);
         }
       }
 
@@ -1226,7 +1211,7 @@
         onAuthStateChanged(auth, (user) => {
           if (user) {
             currentUserUid = user.uid;
-            listenToFirestore();
+            listenToFirestore(); // Mulai baca database jika berhasil login
           }
         });
       }
@@ -1234,6 +1219,7 @@
       // ================= BACA & TULIS DATABASE =================
       function listenToFirestore() {
         if (!currentUserUid || !db) return;
+
         const dataRef = collection(
           db,
           "artifacts",
@@ -1242,6 +1228,7 @@
           currentUserUid,
           "tera_data",
         );
+
         onSnapshot(
           dataRef,
           (snapshot) => {
@@ -1249,95 +1236,77 @@
             snapshot.forEach((doc) => {
               globalTeraData.push({ id: doc.id, ...doc.data() });
             });
+            // Urutkan dari yang terbaru (descending timestamp)
             globalTeraData.sort((a, b) => b.timestamp - a.timestamp);
             updateUI();
           },
-          (error) => console.error("Error database:", error),
+          (error) => console.error("Error membaca database:", error),
         );
       }
 
-      document
-        .getElementById("form-tera")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
+      // Handle Submit Form Tera (Global Function untuk disematkan di OnSubmit)
+      window.handleFormSubmit = async function (e) {
+        e.preventDefault();
 
-          const simpanBtn = e.target.querySelector('button[type="submit"]');
-          const originalText = simpanBtn.innerHTML;
-          simpanBtn.innerHTML =
-            '<i class="ph-bold ph-spinner animate-spin"></i> Menyimpan...';
-          simpanBtn.disabled = true;
+        const simpanBtn = document.getElementById("btn-simpan");
+        const originalText = simpanBtn.innerHTML;
+        simpanBtn.innerHTML =
+          '<i class="ph-bold ph-spinner animate-spin"></i> Menyimpan...';
+        simpanBtn.disabled = true;
 
-          const radioStatus = document.querySelector(
-            'input[name="status-tera"]:checked',
-          );
-          const newData = {
-            nama: document.getElementById("input-nama").value,
-            alamat: document.getElementById("input-alamat").value || "-",
-            gps: document.getElementById("input-gps").value || "-",
-            jenis: document.getElementById("input-jenis").value,
-            merek: document.getElementById("input-merek").value || "-",
-            kapasitas: document.getElementById("input-kapasitas").value || "-",
-            retribusi:
-              parseInt(document.getElementById("input-retribusi").value) || 0,
-            status: radioStatus ? radioStatus.value : "Sah",
-            tanggal: new Date().toLocaleDateString("id-ID", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            }),
-            timestamp: Date.now(),
-          };
+        const radioStatus = document.querySelector(
+          'input[name="status-tera"]:checked',
+        );
+        const newData = {
+          nama: document.getElementById("input-nama").value,
+          alamat: document.getElementById("input-alamat").value || "-",
+          gps: document.getElementById("input-gps").value || "-",
+          jenis: document.getElementById("input-jenis").value,
+          merek: document.getElementById("input-merek").value || "-",
+          kapasitas: document.getElementById("input-kapasitas").value || "-",
+          retribusi:
+            parseInt(document.getElementById("input-retribusi").value) || 0,
+          status: radioStatus ? radioStatus.value : "Sah",
+          tanggal: new Date().toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+          timestamp: Date.now(),
+        };
 
-          if (db && currentUserUid) {
-            try {
-              const dataRef = collection(
-                db,
-                "artifacts",
-                appId,
-                "users",
-                currentUserUid,
-                "tera_data",
-              );
-              await addDoc(dataRef, newData);
-              document.getElementById("toast").innerText =
-                "Tersimpan ke Cloud!"; // Custom Toast direct call
-              e.target.reset();
-              document.getElementById("input-retribusi").value = "0";
-
-              // Trigger pindah ke tab data via Event Click untuk keamanan WebView
-              setTimeout(
-                () =>
-                  document
-                    .querySelector(`.nav-btn[data-target="data"]`)
-                    .click(),
-                500,
-              );
-            } catch (error) {
-              console.error("Gagal simpan", error);
-            }
-          } else {
-            // Mode Simulasi jika Firebase tak diubah
-            globalTeraData.unshift({
-              ...newData,
-              id: Math.random().toString(36).substr(2, 9),
-            });
-            updateUI();
-            e.target.reset();
-            setTimeout(
-              () =>
-                document.querySelector(`.nav-btn[data-target="data"]`).click(),
-              500,
+        if (db && currentUserUid) {
+          try {
+            const dataRef = collection(
+              db,
+              "artifacts",
+              appId,
+              "users",
+              currentUserUid,
+              "tera_data",
             );
+            await addDoc(dataRef, newData);
+
+            window.alertCustom("Tersimpan ke Cloud Firebase!");
+            document.getElementById("form-tera").reset();
+            document.getElementById("input-retribusi").value = "0";
+
+            // Pindah tab otomatis
+            setTimeout(() => window.switchTab("data"), 500);
+          } catch (error) {
+            console.error("Gagal simpan", error);
+            window.alertCustom("Gagal menyimpan data ke Cloud");
           }
+        }
 
-          simpanBtn.innerHTML = originalText;
-          simpanBtn.disabled = false;
-        });
+        simpanBtn.innerHTML = originalText;
+        simpanBtn.disabled = false;
+      };
 
-      // ================= UPDATE TAMPILAN =================
+      // ================= UPDATE TAMPILAN DOM =================
       function updateUI() {
         renderBeranda();
-        window.renderDataList();
+        if (window.renderDataList) window.renderDataList();
       }
 
       function renderBeranda() {
@@ -1359,6 +1328,7 @@
           return;
         }
 
+        // Tampilkan 3 data terbaru
         globalTeraData.slice(0, 3).forEach((item) => {
           const icon =
             item.status === "Sah"
@@ -1390,14 +1360,16 @@
         container.innerHTML = "";
 
         let filteredData = globalTeraData;
-        if (currentFilter !== "Semua")
+        if (currentFilter !== "Semua") {
           filteredData = filteredData.filter(
             (item) => item.status === currentFilter,
           );
-        if (searchQuery)
+        }
+        if (searchQuery) {
           filteredData = filteredData.filter((item) =>
             item.nama.toLowerCase().includes(searchQuery),
           );
+        }
 
         if (filteredData.length === 0) {
           container.innerHTML = `
@@ -1438,7 +1410,7 @@
         });
       };
 
-      // Jalankan ketika halaman diload
+      // Inisialisasi awal saat halaman dimuat
       window.loadProfile();
       initAuth();
     </script>
