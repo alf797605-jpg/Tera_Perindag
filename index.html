@@ -7,11 +7,8 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>Aplikasi Tera Perindag</title>
-    <!-- Memuat Tailwind CSS untuk styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Memuat Phosphor Icons untuk ikon-ikon UI -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- Memuat font Inter dari Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -22,28 +19,24 @@
         font-family: "Inter", sans-serif;
         background-color: #f1f5f9;
       }
-      /* Menyembunyikan scrollbar agar terlihat seperti aplikasi asli */
       ::-webkit-scrollbar {
         display: none;
       }
       * {
         -ms-overflow-style: none;
         scrollbar-width: none;
-        /* Menghilangkan efek highlight biru saat disentuh di HP */
         -webkit-tap-highlight-color: transparent;
       }
 
-      /* Style untuk menu navigasi yang aktif */
       .active-nav {
-        color: #2563eb;
-        font-weight: 700;
+        color: #2563eb !important;
+        font-weight: 700 !important;
       }
       .active-nav i {
-        color: #2563eb;
-        font-weight: bold;
+        color: #2563eb !important;
+        font-weight: bold !important;
       }
 
-      /* Style halaman (Tabs) */
       .page {
         display: none;
         height: 100%;
@@ -54,7 +47,6 @@
         animation: fadeIn 0.3s ease-in-out;
       }
 
-      /* Animasi UI */
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -65,7 +57,6 @@
           transform: translateY(0);
         }
       }
-
       @keyframes slideUp {
         from {
           transform: translateY(100%);
@@ -74,7 +65,6 @@
           transform: translateY(0);
         }
       }
-
       @keyframes popIn {
         from {
           opacity: 0;
@@ -98,7 +88,6 @@
         transition: transform 0.1s;
       }
 
-      /* Kustomisasi input radio untuk pilihan Sah/Batal */
       input[type="radio"]:checked + div {
         border-color: #2563eb;
         background-color: #eff6ff;
@@ -111,13 +100,11 @@
   <body
     class="h-screen w-screen overflow-hidden flex justify-center text-slate-800"
   >
-    <!-- Frame Pembungkus Mobile -->
     <div
       class="w-full max-w-md h-full bg-slate-50 relative shadow-2xl flex flex-col overflow-hidden"
     >
       <!-- ================= PAGE: BERANDA ================= -->
       <div id="page-home" class="page active">
-        <!-- Header Beranda -->
         <div
           class="bg-blue-600 px-5 pt-12 pb-16 rounded-b-[2rem] shadow-lg relative overflow-hidden flex-shrink-0"
         >
@@ -129,18 +116,13 @@
               </h1>
               <p class="text-blue-200 text-xs mt-1">Dinas Perindag</p>
             </div>
-            <!-- Tombol Notifikasi (Menggunakan onclick langsung) -->
             <div
+              onclick="window.notifAlert()"
               class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/30 cursor-pointer active-scale"
-              onclick="handleUIAction('notif')"
             >
               <i class="ph ph-bell text-white text-2xl pointer-events-none"></i>
-              <div
-                class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-blue-600 pointer-events-none"
-              ></div>
             </div>
           </div>
-          <!-- Dekorasi Background -->
           <div
             class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"
           ></div>
@@ -149,11 +131,9 @@
           ></div>
         </div>
 
-        <!-- Konten Beranda (Scrollable) -->
         <div
           class="flex-1 overflow-y-auto px-5 -mt-10 relative z-20 space-y-6 pb-32"
         >
-          <!-- Kartu Statistik -->
           <div
             class="bg-white rounded-2xl p-5 shadow-lg shadow-slate-200/50 border border-slate-50 flex justify-between items-center"
           >
@@ -173,22 +153,21 @@
             </div>
           </div>
 
-          <!-- Aktivitas Terakhir -->
           <div>
             <div class="flex justify-between items-end mb-4">
               <h3 class="font-bold text-slate-800 text-lg">
                 Aktivitas Terakhir
               </h3>
               <button
-                class="text-blue-600 text-xs font-bold active-scale cursor-pointer"
-                onclick="switchTab('data')"
+                onclick="window.switchTab('data')"
+                class="text-blue-600 text-xs font-bold active-scale"
               >
                 Lihat Semua
               </button>
             </div>
             <div class="space-y-3" id="home-recent-list">
               <div class="text-center py-6 text-slate-400 text-sm">
-                Memuat data...
+                Menunggu koneksi server...
               </div>
             </div>
           </div>
@@ -199,8 +178,6 @@
       <div id="page-data" class="page bg-slate-50">
         <div class="bg-white px-5 pt-12 pb-4 shadow-sm z-10 flex-shrink-0">
           <h1 class="text-xl font-bold text-slate-800 mb-4">Data Tera</h1>
-
-          <!-- Fitur Pencarian -->
           <div class="relative mb-4">
             <i
               class="ph ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"
@@ -208,39 +185,37 @@
             <input
               type="text"
               id="search-input"
-              oninput="handleSearch()"
+              oninput="window.renderDataList()"
               placeholder="Cari nama pemilik / usaha..."
               class="w-full bg-slate-100 text-slate-700 text-sm rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
           </div>
-
-          <!-- Fitur Filter -->
           <div class="flex gap-2 overflow-x-auto pb-2" id="filter-container">
             <button
-              onclick="setFilter(this, 'Semua')"
-              class="filter-btn active whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-white transition-colors cursor-pointer"
+              onclick="window.setFilter('Semua', this)"
+              class="filter-btn active whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-white transition-colors"
             >
               Semua
             </button>
             <button
-              onclick="setFilter(this, 'Sah')"
-              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-colors cursor-pointer"
+              onclick="window.setFilter('Sah', this)"
+              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-colors"
             >
               Hanya Sah
             </button>
             <button
-              onclick="setFilter(this, 'Batal')"
-              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-colors cursor-pointer"
+              onclick="window.setFilter('Batal', this)"
+              class="filter-btn whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-colors"
             >
               Hanya Batal
             </button>
           </div>
         </div>
-
-        <!-- Daftar Data (Scrollable) -->
         <div class="flex-1 overflow-y-auto p-4 pb-32">
           <div class="space-y-3" id="data-list-container">
-            <!-- Data akan dimuat melalui JavaScript -->
+            <div class="text-center py-10 text-slate-400 text-sm">
+              Memuat data...
+            </div>
           </div>
         </div>
       </div>
@@ -254,12 +229,8 @@
           </p>
         </div>
 
-        <form
-          id="form-tera"
-          onsubmit="window.handleFormSubmit(event)"
-          class="flex-1 overflow-y-auto p-5 pb-32 space-y-5"
-        >
-          <!-- Info Pemilik -->
+        <!-- PERBAIKAN PENTING: Dihapus tag <form> agar tidak auto-reload di Kodular -->
+        <div class="flex-1 overflow-y-auto p-5 pb-32 space-y-5">
           <div class="space-y-4">
             <h2 class="text-sm font-bold text-blue-600 flex items-center gap-2">
               <i class="ph-fill ph-user-circle"></i> Info Pemilik / Usaha
@@ -271,8 +242,8 @@
               <input
                 type="text"
                 id="input-nama"
-                required
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Wajib diisi"
               />
             </div>
             <div>
@@ -282,8 +253,8 @@
               <textarea
                 id="input-alamat"
                 rows="2"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
-                placeholder="Alamat lengkap lokasi pengujian..."
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Alamat lengkap..."
               ></textarea>
             </div>
             <div>
@@ -295,17 +266,15 @@
                   type="text"
                   id="input-gps"
                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-500"
-                  placeholder="Belum disinkronisasi..."
+                  placeholder="Klik ikon target ->"
                   readonly
                 />
                 <button
                   type="button"
-                  onclick="handleUIAction('gps')"
-                  class="bg-blue-100 text-blue-600 px-4 rounded-xl font-bold active-scale flex items-center justify-center cursor-pointer"
+                  onclick="window.getGPSLocation()"
+                  class="bg-blue-100 text-blue-600 px-4 rounded-xl font-bold active-scale flex items-center justify-center"
                 >
-                  <i
-                    class="ph-bold ph-crosshair text-lg pointer-events-none"
-                  ></i>
+                  <i class="ph-bold ph-crosshair text-lg"></i>
                 </button>
               </div>
             </div>
@@ -313,7 +282,6 @@
 
           <hr class="border-slate-100" />
 
-          <!-- Info Alat UTTP -->
           <div class="space-y-4">
             <h2 class="text-sm font-bold text-blue-600 flex items-center gap-2">
               <i class="ph-fill ph-scales"></i> Data Alat (UTTP)
@@ -324,10 +292,9 @@
               >
               <select
                 id="input-jenis"
-                required
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
               >
-                <option value="">Pilih jenis alat...</option>
+                <option value="">-- Pilih jenis alat (Wajib) --</option>
                 <optgroup label="Kelompok Timbangan">
                   <option value="Timbangan Meja">Timbangan Meja</option>
                   <option value="Timbangan Sentisimal">
@@ -338,31 +305,27 @@
                   </option>
                   <option value="Timbangan Dacin">Timbangan Dacin</option>
                   <option value="Timbangan Pegas">Timbangan Pegas</option>
-                  <option value="Timbangan Jembatan">
-                    Timbangan Jembatan (Jembatan Timbang)
-                  </option>
+                  <option value="Timbangan Jembatan">Timbangan Jembatan</option>
                   <option value="Timbangan Cepat">Timbangan Cepat</option>
                   <option value="Anak Timbangan (AT)">
                     Anak Timbangan (AT)
                   </option>
                 </optgroup>
-                <optgroup label="Kelompok Meteran & Panjang">
+                <optgroup label="Kelompok Meteran">
                   <option value="Meter Air">Meter Air (PDAM)</option>
-                  <option value="Meter Listrik (kWh)">
-                    Meter Listrik (kWh)
-                  </option>
+                  <option value="Meter Listrik">Meter Listrik (kWh)</option>
                   <option value="Meter Gas">Meter Gas</option>
-                  <option value="Meter Taksi">Meter Taksi (Argometer)</option>
-                  <option value="Meter Panjang (Kayu/Kain)">
+                  <option value="Meter Taksi">Meter Taksi</option>
+                  <option value="Meter Panjang">
                     Meter Panjang (Kayu/Kain)
                   </option>
                 </optgroup>
-                <optgroup label="Kelompok Volume & Cairan">
+                <optgroup label="Kelompok Volume">
                   <option value="Pompa Ukur BBM">Pompa Ukur BBM (SPBU)</option>
                   <option value="Tangki Ukur Mobil">
-                    Tangki Ukur Mobil (BBM/CPO)
+                    Tangki Ukur Mobil (BBM)
                   </option>
-                  <option value="Takaran Volume (Literan)">
+                  <option value="Takaran Volume">
                     Takaran Volume (Literan)
                   </option>
                 </optgroup>
@@ -376,7 +339,7 @@
                 <input
                   type="text"
                   id="input-merek"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div class="flex-1">
@@ -386,8 +349,8 @@
                 <input
                   type="text"
                   id="input-kapasitas"
-                  placeholder="Cth: 10 Kg / 50 L"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                  placeholder="Cth: 10 Kg"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -404,7 +367,7 @@
                   type="number"
                   id="input-retribusi"
                   value="0"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -412,7 +375,6 @@
 
           <hr class="border-slate-100" />
 
-          <!-- Hasil Pengujian -->
           <div class="space-y-4">
             <h2 class="text-sm font-bold text-blue-600 flex items-center gap-2">
               <i class="ph-fill ph-clipboard-text"></i> Hasil Pengujian
@@ -454,16 +416,18 @@
             </div>
           </div>
 
+          <!-- PERBAIKAN PENTING: Type diubah jadi 'button' dan pakai onclick -->
           <div class="pt-2 pb-10">
             <button
-              type="submit"
+              type="button"
               id="btn-simpan"
-              class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 active-scale transition-transform flex items-center justify-center gap-2 cursor-pointer"
+              onclick="window.prosesSimpan()"
+              class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 active-scale transition-transform flex items-center justify-center gap-2"
             >
               <i class="ph-bold ph-floppy-disk"></i> Simpan Data Tera
             </button>
           </div>
-        </form>
+        </div>
       </div>
 
       <!-- ================= PAGE: PROFIL ================= -->
@@ -472,17 +436,14 @@
           <h1 class="text-xl font-bold text-slate-800">Profil Petugas</h1>
         </div>
         <div class="flex-1 overflow-y-auto p-5 space-y-6 pb-32">
-          <!-- Kartu Profil -->
           <div
             class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative"
           >
             <button
-              onclick="handleUIAction('editProfile')"
-              class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-600 active-scale cursor-pointer"
+              onclick="window.bukaEditProfil()"
+              class="absolute top-4 right-4 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:text-blue-600 active-scale"
             >
-              <i
-                class="ph-bold ph-pencil-simple text-sm pointer-events-none"
-              ></i>
+              <i class="ph-bold ph-pencil-simple text-sm"></i>
             </button>
             <div class="flex items-center gap-4">
               <div
@@ -507,17 +468,16 @@
             </div>
           </div>
 
-          <!-- Menu Pengaturan -->
           <div
             class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
           >
             <button
-              onclick="handleUIAction('connectPrinter')"
-              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group cursor-pointer"
+              onclick="window.connectPrinter()"
+              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors"
             >
-              <div class="flex items-center gap-3 pointer-events-none">
+              <div class="flex items-center gap-3">
                 <div
-                  class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors"
+                  class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500"
                 >
                   <i class="ph-fill ph-printer text-xl"></i>
                 </div>
@@ -530,57 +490,27 @@
                   </p>
                 </div>
               </div>
-              <i
-                class="ph-bold ph-caret-right text-slate-300 pointer-events-none"
-              ></i>
+              <i class="ph-bold ph-caret-right text-slate-300"></i>
             </button>
             <button
-              onclick="handleUIAction('syncInfo')"
-              class="w-full p-4 flex items-center justify-between border-b border-slate-50 active:bg-slate-50 transition-colors group cursor-pointer"
+              class="w-full p-4 flex items-center justify-between border-b border-slate-50"
             >
-              <div class="flex items-center gap-3 pointer-events-none">
+              <div class="flex items-center gap-3">
                 <div
-                  class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors"
+                  class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500"
                 >
                   <i class="ph-fill ph-cloud-arrow-up text-xl"></i>
                 </div>
                 <div class="text-left">
                   <p class="font-semibold text-slate-700 text-sm">
-                    Status Server Cloud
+                    Status Database
                   </p>
-                  <p class="text-xs text-green-500 font-medium">
-                    Terhubung (Online)
+                  <p class="text-xs text-green-500 font-medium" id="status-db">
+                    Menghubungkan...
                   </p>
                 </div>
               </div>
-              <i
-                class="ph-bold ph-caret-right text-slate-300 pointer-events-none"
-              ></i>
             </button>
-            <button
-              onclick="handleUIAction('logout')"
-              class="w-full p-4 flex items-center justify-between active:bg-red-50 transition-colors group cursor-pointer"
-            >
-              <div class="flex items-center gap-3 pointer-events-none">
-                <div
-                  class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-white transition-colors"
-                >
-                  <i class="ph-fill ph-sign-out text-xl"></i>
-                </div>
-                <div class="text-left">
-                  <p class="font-semibold text-red-600 text-sm">Keluar Akun</p>
-                </div>
-              </div>
-            </button>
-          </div>
-
-          <div class="text-center pb-10">
-            <p class="text-xs text-slate-400 font-medium">
-              Aplikasi Tera Perindag v2.2.0
-            </p>
-            <p class="text-[10px] text-slate-400 mt-1">
-              &copy; 2026 Dinas Perindag
-            </p>
           </div>
         </div>
       </div>
@@ -590,58 +520,49 @@
         class="absolute bottom-0 w-full bg-white/90 backdrop-blur-md border-t border-slate-100 flex justify-between items-center px-6 py-2 shadow-[0_-5px_15px_-10px_rgba(0,0,0,0.1)] z-50"
       >
         <button
-          id="nav-btn-home"
-          onclick="switchTab('home')"
-          class="nav-btn-item flex flex-col items-center gap-1 p-2 w-16 active-nav cursor-pointer"
+          onclick="window.switchTab('home')"
+          id="nav-home"
+          class="nav-btn active-nav flex flex-col items-center gap-1 p-2 w-16"
         >
           <i
-            class="ph-fill ph-house text-2xl text-blue-600 transition-colors pointer-events-none"
+            class="ph-fill text-blue-600 ph-house text-2xl transition-colors"
           ></i>
-          <span
-            class="text-[10px] text-blue-600 font-bold transition-colors pointer-events-none"
+          <span class="text-[10px] text-blue-600 font-bold transition-colors"
             >Beranda</span
           >
         </button>
         <button
-          id="nav-btn-data"
-          onclick="switchTab('data')"
-          class="nav-btn-item flex flex-col items-center gap-1 p-2 w-16 cursor-pointer"
+          onclick="window.switchTab('data')"
+          id="nav-data"
+          class="nav-btn flex flex-col items-center gap-1 p-2 w-16"
         >
-          <i
-            class="ph ph-folder text-2xl text-slate-400 transition-colors pointer-events-none"
-          ></i>
-          <span
-            class="text-[10px] text-slate-400 font-medium transition-colors pointer-events-none"
+          <i class="ph text-slate-400 ph-folder text-2xl transition-colors"></i>
+          <span class="text-[10px] text-slate-400 font-medium transition-colors"
             >Data</span
           >
         </button>
-
         <div class="relative -top-6">
           <button
-            onclick="switchTab('input')"
-            class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 text-white active-scale border-4 border-slate-50 cursor-pointer"
+            onclick="window.switchTab('input')"
+            id="nav-input"
+            class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 text-white active-scale border-4 border-slate-50"
           >
-            <i class="ph-bold ph-plus text-2xl pointer-events-none"></i>
+            <i class="ph-bold ph-plus text-2xl"></i>
           </button>
         </div>
-
         <button
-          id="nav-btn-profil"
-          onclick="switchTab('profil')"
-          class="nav-btn-item flex flex-col items-center gap-1 p-2 w-16 cursor-pointer"
+          onclick="window.switchTab('profil')"
+          id="nav-profil"
+          class="nav-btn flex flex-col items-center gap-1 p-2 w-16"
         >
-          <i
-            class="ph ph-user text-2xl text-slate-400 transition-colors pointer-events-none"
-          ></i>
-          <span
-            class="text-[10px] text-slate-400 font-medium transition-colors pointer-events-none"
+          <i class="ph text-slate-400 ph-user text-2xl transition-colors"></i>
+          <span class="text-[10px] text-slate-400 font-medium transition-colors"
             >Profil</span
           >
         </button>
       </div>
 
-      <!-- ================= MODALS & OVERLAYS ================= -->
-
+      <!-- ================= MODALS ================= -->
       <!-- Modal Detail Data -->
       <div
         id="modal-detail"
@@ -679,7 +600,7 @@
                 <p
                   class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
                 >
-                  Nama Pemilik / Usaha
+                  Pemilik / Usaha
                 </p>
                 <p class="text-sm font-semibold text-slate-700" id="det-nama">
                   -
@@ -694,14 +615,6 @@
                 <p class="text-sm font-medium text-slate-700" id="det-alamat">
                   -
                 </p>
-              </div>
-              <div>
-                <p
-                  class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
-                >
-                  Koordinat GPS
-                </p>
-                <p class="text-xs font-mono text-blue-600" id="det-gps">-</p>
               </div>
             </div>
             <div
@@ -742,45 +655,32 @@
                   </p>
                 </div>
               </div>
-              <div>
-                <p
-                  class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
-                >
-                  Retribusi
-                </p>
-                <p
-                  class="text-sm font-bold text-emerald-600"
-                  id="det-retribusi"
-                >
-                  -
-                </p>
-              </div>
             </div>
           </div>
           <div class="flex gap-3 mt-4 flex-shrink-0">
             <button
-              onclick="handleUIAction('closeModal', 'modal-detail')"
-              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale cursor-pointer"
+              onclick="window.tutupModal('modal-detail')"
+              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale"
             >
               Tutup
             </button>
             <button
-              onclick="handleUIAction('printSKHP')"
-              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale flex items-center justify-center gap-2 cursor-pointer"
+              onclick="window.printSKHP()"
+              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale flex items-center justify-center gap-2"
             >
-              <i class="ph-bold ph-printer pointer-events-none"></i> Cetak SKHP
+              <i class="ph-bold ph-printer"></i> Cetak SKHP
             </button>
           </div>
           <button
-            onclick="handleUIAction('requestDelete')"
-            class="mt-3 py-2 text-red-500 text-xs font-bold flex items-center justify-center gap-1 active-scale cursor-pointer"
+            onclick="window.bukaKonfirmasiHapus()"
+            class="mt-3 py-2 text-red-500 text-xs font-bold flex items-center justify-center gap-1 active-scale"
           >
-            <i class="ph-bold ph-trash pointer-events-none"></i> Hapus Data Ini
+            <i class="ph-bold ph-trash"></i> Hapus Data Ini
           </button>
         </div>
       </div>
 
-      <!-- Modal Custom Confirm Hapus -->
+      <!-- Modal Confirm Hapus -->
       <div
         id="modal-confirm"
         class="absolute inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm hidden flex-col justify-center items-center px-4"
@@ -793,18 +693,18 @@
           ></i>
           <h3 class="text-lg font-bold text-slate-800">Hapus Data?</h3>
           <p class="text-sm text-slate-500 mt-1">
-            Data yang dihapus dari server tidak dapat dikembalikan lagi.
+            Data yang dihapus dari server tidak dapat dikembalikan.
           </p>
           <div class="flex gap-3 mt-6">
             <button
-              onclick="handleUIAction('cancelDelete')"
-              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale cursor-pointer"
+              onclick="window.tutupModal('modal-confirm')"
+              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale"
             >
               Batal
             </button>
             <button
-              onclick="handleUIAction('executeDelete')"
-              class="w-full py-3 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md active-scale cursor-pointer"
+              onclick="window.hapusDataFirebase()"
+              class="w-full py-3 bg-red-600 text-white rounded-xl font-bold text-sm shadow-md active-scale"
             >
               Ya, Hapus
             </button>
@@ -858,14 +758,14 @@
           </div>
           <div class="flex gap-3 mt-6">
             <button
-              onclick="handleUIAction('closeModal', 'modal-edit-profil')"
-              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale cursor-pointer"
+              onclick="window.tutupModal('modal-edit-profil')"
+              class="w-full py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm active-scale"
             >
               Batal
             </button>
             <button
-              onclick="handleUIAction('saveProfile')"
-              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale cursor-pointer"
+              onclick="window.simpanProfil()"
+              class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-md active-scale"
             >
               Simpan
             </button>
@@ -873,71 +773,25 @@
         </div>
       </div>
 
-      <!-- Custom Toast Alert -->
+      <!-- Toast Alert -->
       <div
         id="toast"
-        class="absolute top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg z-[90] transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4 whitespace-nowrap"
+        class="absolute top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-medium shadow-lg z-[90] transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4"
       >
-        Pesan notifikasi
+        Pesan
       </div>
     </div>
 
-    <!-- SCRIPT UI GLOBAL AGAR KOMPATIBEL DENGAN KODULAR (ONCLICK) -->
+    <!-- ================= SCRIPT GLOBAL (UI & NAVIGASI) ================= -->
     <script>
       let globalTeraData = [];
       let currentDetailId = null;
       let currentFilter = "Semua";
+      const appId = "tera-app-v2";
 
-      // Pindah Halaman Tab
-      window.switchTab = function (tabId) {
-        document.querySelectorAll(".page").forEach((page) => {
-          page.style.display = "none";
-          page.classList.remove("active");
-        });
-
-        const targetPage = document.getElementById(`page-${tabId}`);
-        if (targetPage) {
-          targetPage.style.display = "flex";
-          targetPage.classList.add("active");
-        }
-
-        // Update indikator warna pada menu bawah
-        document.querySelectorAll(".nav-btn-item").forEach((btn) => {
-          btn.classList.remove("active-nav");
-          const icon = btn.querySelector("i");
-          const text = btn.querySelector("span");
-
-          if (icon && text) {
-            // Reset ke warna abu-abu
-            icon.classList.remove("text-blue-600", "ph-fill");
-            icon.classList.add("text-slate-400", "ph");
-            text.classList.remove("text-blue-600", "font-bold");
-            text.classList.add("text-slate-400", "font-medium");
-          }
-        });
-
-        // Setel warna biru ke tab yang aktif (kecuali tab input)
-        if (tabId !== "input") {
-          const activeBtn = document.getElementById(`nav-btn-${tabId}`);
-          if (activeBtn) {
-            activeBtn.classList.add("active-nav");
-            const activeIcon = activeBtn.querySelector("i");
-            const activeText = activeBtn.querySelector("span");
-
-            if (activeIcon && activeText) {
-              activeIcon.classList.remove("text-slate-400", "ph");
-              activeIcon.classList.add("text-blue-600", "ph-fill");
-              activeText.classList.remove("text-slate-400", "font-medium");
-              activeText.classList.add("text-blue-600", "font-bold");
-            }
-          }
-        }
-      };
-
-      // Tampilkan Notifikasi Toast
-      window.alertCustom = function (msg) {
+      // 1. Fungsi Toast
+      window.tampilkanPesan = function (msg) {
         const toast = document.getElementById("toast");
-        if (!toast) return;
         toast.innerText = msg;
         toast.classList.remove("opacity-0", "-translate-y-4");
         toast.classList.add("opacity-100", "translate-y-0");
@@ -947,29 +801,139 @@
         }, 3000);
       };
 
-      // Setel Filter Pencarian
-      window.setFilter = function (btnElement, filterValue) {
-        document.querySelectorAll(".filter-btn").forEach((b) => {
-          b.classList.remove("bg-slate-800", "text-white", "active");
-          b.classList.add("bg-white", "text-slate-600", "border-slate-200");
+      // 2. Fungsi Navigasi Tab
+      window.switchTab = function (tabId) {
+        document.querySelectorAll(".page").forEach((page) => {
+          page.style.display = "none";
+          page.classList.remove("active");
         });
-        btnElement.classList.remove(
-          "bg-white",
-          "text-slate-600",
-          "border-slate-200",
-        );
-        btnElement.classList.add("bg-slate-800", "text-white", "active");
+        const targetPage = document.getElementById(`page-${tabId}`);
+        if (targetPage) {
+          targetPage.style.display = "flex";
+          targetPage.classList.add("active");
+        }
 
-        currentFilter = filterValue;
-        if (window.renderDataList) window.renderDataList();
+        // Reset ikon nav
+        document.querySelectorAll(".nav-btn").forEach((btn) => {
+          btn.classList.remove("active-nav");
+          const i = btn.querySelector("i");
+          const s = btn.querySelector("span");
+          if (i && btn.id !== "nav-input") {
+            i.classList.remove("ph-fill", "text-blue-600");
+            i.classList.add("ph", "text-slate-400");
+          }
+          if (s && btn.id !== "nav-input") {
+            s.classList.remove("text-blue-600", "font-bold");
+            s.classList.add("text-slate-400");
+          }
+        });
+
+        // Set aktif ikon nav
+        const activeBtn = document.getElementById(`nav-${tabId}`);
+        if (activeBtn && tabId !== "input") {
+          activeBtn.classList.add("active-nav");
+          const i = activeBtn.querySelector("i");
+          const s = activeBtn.querySelector("span");
+          if (i) {
+            i.classList.remove("ph", "text-slate-400");
+            i.classList.add("ph-fill", "text-blue-600");
+          }
+          if (s) {
+            s.classList.remove("text-slate-400");
+            s.classList.add("text-blue-600", "font-bold");
+          }
+        }
       };
 
-      // Handle Input Pencarian Text
-      window.handleSearch = function () {
-        if (window.renderDataList) window.renderDataList();
+      // 3. Fungsi Modal & Profil
+      window.tutupModal = function (id) {
+        const modal = document.getElementById(id);
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
       };
 
-      // Format Angka Rupiah
+      window.bukaEditProfil = function () {
+        document.getElementById("edit-nama").value =
+          document.getElementById("profil-nama").innerText;
+        document.getElementById("edit-jabatan").value =
+          document.getElementById("profil-jabatan").innerText;
+        document.getElementById("edit-nip").value =
+          document.getElementById("profil-nip").innerText;
+        document.getElementById("modal-edit-profil").classList.remove("hidden");
+        document.getElementById("modal-edit-profil").classList.add("flex");
+      };
+
+      window.simpanProfil = function () {
+        const data = {
+          nama: document.getElementById("edit-nama").value,
+          jabatan: document.getElementById("edit-jabatan").value,
+          nip: document.getElementById("edit-nip").value,
+        };
+        localStorage.setItem("teraProfile", JSON.stringify(data));
+        window.loadProfilUI();
+        window.tutupModal("modal-edit-profil");
+        window.tampilkanPesan("Profil disimpan");
+      };
+
+      window.loadProfilUI = function () {
+        const data = JSON.parse(localStorage.getItem("teraProfile"));
+        if (data) {
+          document.getElementById("profil-nama").innerText = data.nama;
+          document.getElementById("home-nama-petugas").innerText = data.nama;
+          document.getElementById("profil-jabatan").innerText = data.jabatan;
+          document.getElementById("profil-nip").innerText = data.nip;
+        }
+      };
+
+      window.loadProfilUI();
+
+      // 4. GPS & Printer
+      window.getGPSLocation = function () {
+        const btn = document.getElementById("input-gps");
+        btn.value = "Mencari lokasi...";
+        if (window.AppInventor) {
+          window.AppInventor.setWebViewString(
+            JSON.stringify({ action: "GET_LOCATION" }),
+          );
+        }
+        setTimeout(() => {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                btn.value = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+              },
+              (err) => {
+                btn.value = "-4.0034, 122.5076 (Bawaan)";
+                window.tampilkanPesan("GPS Gagal, data bawaan dipakai");
+              },
+            );
+          } else {
+            btn.value = "-4.0034, 122.5076 (Bawaan)";
+          }
+        }, 1500);
+      };
+
+      window.connectPrinter = function () {
+        if (window.AppInventor)
+          window.AppInventor.setWebViewString(
+            JSON.stringify({ action: "CONNECT_PRINTER" }),
+          );
+        else window.tampilkanPesan("Gunakan Kodular untuk fitur ini");
+      };
+
+      window.printSKHP = function () {
+        if (window.AppInventor)
+          window.AppInventor.setWebViewString(
+            JSON.stringify({ action: "PRINT_SKHP", id: currentDetailId }),
+          );
+        window.tampilkanPesan("Perintah cetak dikirim");
+      };
+
+      window.notifAlert = function () {
+        window.tampilkanPesan("Tidak ada notifikasi baru");
+      };
+
+      // 5. Fungsi Render UI List Data
       window.formatRupiah = function (angka) {
         return new Intl.NumberFormat("id-ID", {
           style: "currency",
@@ -978,8 +942,7 @@
         }).format(angka);
       };
 
-      // Buka Detail Item
-      window.openDetail = function (id) {
+      window.bukaDetail = function (id) {
         const item = globalTeraData.find((d) => d.id === id);
         if (!item) return;
         currentDetailId = id;
@@ -989,7 +952,6 @@
           : "-";
         document.getElementById("det-nama").innerText = item.nama || "-";
         document.getElementById("det-alamat").innerText = item.alamat || "-";
-        document.getElementById("det-gps").innerText = item.gps || "-";
         document.getElementById("det-jenis").innerText = item.jenis || "-";
         document.getElementById("det-merek").innerText = item.merek || "-";
         document.getElementById("det-kapasitas").innerText =
@@ -999,377 +961,79 @@
 
         const badge = document.getElementById("det-badge");
         badge.innerText = item.status || "Sah";
-        if (item.status === "Sah") {
-          badge.className =
-            "px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700";
-        } else {
-          badge.className =
-            "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
-        }
+        badge.className =
+          item.status === "Sah"
+            ? "px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700"
+            : "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700";
 
-        const modal = document.getElementById("modal-detail");
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
+        document.getElementById("modal-detail").classList.remove("hidden");
+        document.getElementById("modal-detail").classList.add("flex");
       };
 
-      // Pusat Handler Aksi UI
-      window.handleUIAction = function (action, targetId) {
-        if (action === "closeModal") {
-          const modal = document.getElementById(targetId);
-          if (modal) {
-            modal.classList.add("hidden");
-            modal.classList.remove("flex");
-          }
-        } else if (action === "editProfile") {
-          document.getElementById("edit-nama").value =
-            document.getElementById("profil-nama").innerText;
-          document.getElementById("edit-jabatan").value =
-            document.getElementById("profil-jabatan").innerText;
-          document.getElementById("edit-nip").value =
-            document.getElementById("profil-nip").innerText;
-
-          const modalEdit = document.getElementById("modal-edit-profil");
-          modalEdit.classList.remove("hidden");
-          modalEdit.classList.add("flex");
-        } else if (action === "saveProfile") {
-          const dataProfile = {
-            nama: document.getElementById("edit-nama").value,
-            jabatan: document.getElementById("edit-jabatan").value,
-            nip: document.getElementById("edit-nip").value,
-          };
-          localStorage.setItem("teraProfile", JSON.stringify(dataProfile));
-          if (window.loadProfile) window.loadProfile();
-          window.handleUIAction("closeModal", "modal-edit-profil");
-          window.alertCustom("Profil berhasil diperbarui");
-        } else if (action === "notif") {
-          window.alertCustom("Belum ada notifikasi baru");
-        } else if (action === "syncInfo") {
-          window.alertCustom("Tersambung ke Cloud Firestore");
-        } else if (action === "logout") {
-          window.alertCustom("Terkunci dalam mode Online Anonymous.");
-        } else if (action === "gps") {
-          if (window.getGPSLocation) window.getGPSLocation();
-        } else if (action === "connectPrinter") {
-          if (window.connectPrinter) window.connectPrinter();
-        } else if (action === "printSKHP") {
-          if (window.printSKHP) window.printSKHP();
-        } else if (action === "requestDelete") {
-          const confirmModal = document.getElementById("modal-confirm");
-          confirmModal.classList.remove("hidden");
-          confirmModal.classList.add("flex");
-        } else if (action === "cancelDelete") {
-          window.handleUIAction("closeModal", "modal-confirm");
-        } else if (action === "executeDelete") {
-          if (window.deleteCurrentData) window.deleteCurrentData();
-          window.handleUIAction("closeModal", "modal-confirm");
-        }
-      };
-    </script>
-
-    <!-- ================= JAVASCRIPT & FIREBASE ================= -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-      import {
-        getAuth,
-        signInAnonymously,
-        onAuthStateChanged,
-      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-      import {
-        getFirestore,
-        collection,
-        addDoc,
-        onSnapshot,
-        deleteDoc,
-        doc,
-      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-      // Konfigurasi Asli Firebase Anda
-      const firebaseConfig = {
-        apiKey: "AIzaSyAHj8wfsq2t_H-nE0WsurNL-R_CN2Br9w",
-        authDomain: "aplikasi-tera-perindag.firebaseapp.com",
-        projectId: "aplikasi-tera-perindag",
-        storageBucket: "aplikasi-tera-perindag.firebasestorage.app",
-        messagingSenderId: "976799307229",
-        appId: "1:976799307229:web:bc4ea6059b5e62ef445234",
-        measurementId: "G-REJG96N7K",
+      window.bukaKonfirmasiHapus = function () {
+        document.getElementById("modal-confirm").classList.remove("hidden");
+        document.getElementById("modal-confirm").classList.add("flex");
       };
 
-      // ID Aplikasi untuk folder database
-      const appId = "tera-app-v2";
-
-      // Inisialisasi Firebase
-      let app, auth, db;
-      try {
-        app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-        console.log("Firebase Berhasil Terhubung!");
-      } catch (e) {
-        console.error("Gagal koneksi Firebase", e);
-      }
-
-      let currentUserUid = null;
-
-      // ================= EXPORT FUNGSI KE WINDOW =================
-      window.loadProfile = function () {
-        const savedProfil = JSON.parse(localStorage.getItem("teraProfile"));
-        if (savedProfil) {
-          const profileNamaEl = document.getElementById("profil-nama");
-          const profileJabatanEl = document.getElementById("profil-jabatan");
-          const profileNipEl = document.getElementById("profil-nip");
-          const homeNamaEl = document.getElementById("home-nama-petugas");
-
-          if (profileNamaEl) profileNamaEl.innerText = savedProfil.nama;
-          if (profileJabatanEl)
-            profileJabatanEl.innerText = savedProfil.jabatan;
-          if (profileNipEl) profileNipEl.innerText = savedProfil.nip;
-          if (homeNamaEl) homeNamaEl.innerText = savedProfil.nama;
-        }
-      };
-
-      window.getGPSLocation = function () {
-        const btn = document.getElementById("input-gps");
-        btn.value = "Mencari lokasi...";
-        if (window.AppInventor && window.AppInventor.setWebViewString) {
-          window.AppInventor.setWebViewString(
-            JSON.stringify({ action: "GET_LOCATION" }),
-          );
-        }
-        setTimeout(() => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                btn.value = `${position.coords.latitude.toFixed(5)}, ${position.coords.longitude.toFixed(5)}`;
-                window.alertCustom("Lokasi ditemukan");
-              },
-              (error) => {
-                btn.value = "-4.0034, 122.5076 (Simulasi GPS)";
-              },
-            );
-          } else {
-            btn.value = "-4.0034, 122.5076 (Simulasi GPS)";
-          }
-        }, 1000);
-      };
-
-      window.connectPrinter = function () {
-        if (window.AppInventor && window.AppInventor.setWebViewString) {
-          window.AppInventor.setWebViewString(
-            JSON.stringify({ action: "CONNECT_PRINTER" }),
-          );
-        } else {
-          alert("Gunakan Aplikasi Kodular untuk menghubungkan Bluetooth");
-        }
-      };
-
-      window.printSKHP = function () {
-        const item = globalTeraData.find((d) => d.id === currentDetailId);
-        if (!item) return;
-        if (window.AppInventor && window.AppInventor.setWebViewString) {
-          window.AppInventor.setWebViewString(
-            JSON.stringify({ action: "PRINT_SKHP", data: item }),
-          );
-        } else {
-          window.alertCustom("Permintaan Print SKHP Terkirim");
-        }
-      };
-
-      // Fungsi Hapus dari Firebase Database
-      window.deleteCurrentData = async function () {
-        if (!currentUserUid || !currentDetailId) return;
-        try {
-          const docRef = doc(
-            db,
-            "artifacts",
-            appId,
-            "users",
-            currentUserUid,
-            "tera_data",
-            currentDetailId,
-          );
-          await deleteDoc(docRef);
-
-          window.handleUIAction("closeModal", "modal-detail");
-          window.alertCustom("Data berhasil dihapus dari Cloud");
-        } catch (error) {
-          console.error("Gagal menghapus data", error);
-          window.alertCustom("Gagal menghapus data");
-        }
-      };
-
-      // ================= AUTENTIKASI OTOMATIS =================
-      async function initAuth() {
-        if (!auth) return;
-        try {
-          await signInAnonymously(auth);
-        } catch (error) {
-          console.error("Gagal autentikasi anonim", error);
-        }
-      }
-
-      if (auth) {
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            currentUserUid = user.uid;
-            listenToFirestore(); // Mulai baca database jika berhasil login
-          }
+      window.setFilter = function (filterName, element) {
+        document.querySelectorAll(".filter-btn").forEach((b) => {
+          b.classList.remove("bg-slate-800", "text-white", "active");
+          b.classList.add("bg-white", "text-slate-600", "border-slate-200");
         });
-      }
-
-      // ================= BACA & TULIS DATABASE =================
-      function listenToFirestore() {
-        if (!currentUserUid || !db) return;
-
-        const dataRef = collection(
-          db,
-          "artifacts",
-          appId,
-          "users",
-          currentUserUid,
-          "tera_data",
+        element.classList.remove(
+          "bg-white",
+          "text-slate-600",
+          "border-slate-200",
         );
-
-        onSnapshot(
-          dataRef,
-          (snapshot) => {
-            globalTeraData = [];
-            snapshot.forEach((doc) => {
-              globalTeraData.push({ id: doc.id, ...doc.data() });
-            });
-            // Urutkan dari yang terbaru (descending timestamp)
-            globalTeraData.sort((a, b) => b.timestamp - a.timestamp);
-            updateUI();
-          },
-          (error) => console.error("Error membaca database:", error),
-        );
-      }
-
-      // Handle Submit Form Tera (Global Function untuk disematkan di OnSubmit)
-      window.handleFormSubmit = async function (e) {
-        e.preventDefault();
-
-        const simpanBtn = document.getElementById("btn-simpan");
-        const originalText = simpanBtn.innerHTML;
-        simpanBtn.innerHTML =
-          '<i class="ph-bold ph-spinner animate-spin"></i> Menyimpan...';
-        simpanBtn.disabled = true;
-
-        const radioStatus = document.querySelector(
-          'input[name="status-tera"]:checked',
-        );
-        const newData = {
-          nama: document.getElementById("input-nama").value,
-          alamat: document.getElementById("input-alamat").value || "-",
-          gps: document.getElementById("input-gps").value || "-",
-          jenis: document.getElementById("input-jenis").value,
-          merek: document.getElementById("input-merek").value || "-",
-          kapasitas: document.getElementById("input-kapasitas").value || "-",
-          retribusi:
-            parseInt(document.getElementById("input-retribusi").value) || 0,
-          status: radioStatus ? radioStatus.value : "Sah",
-          tanggal: new Date().toLocaleDateString("id-ID", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }),
-          timestamp: Date.now(),
-        };
-
-        if (db && currentUserUid) {
-          try {
-            const dataRef = collection(
-              db,
-              "artifacts",
-              appId,
-              "users",
-              currentUserUid,
-              "tera_data",
-            );
-            await addDoc(dataRef, newData);
-
-            window.alertCustom("Tersimpan ke Cloud Firebase!");
-            document.getElementById("form-tera").reset();
-            document.getElementById("input-retribusi").value = "0";
-
-            // Pindah tab otomatis
-            setTimeout(() => window.switchTab("data"), 500);
-          } catch (error) {
-            console.error("Gagal simpan", error);
-            window.alertCustom("Gagal menyimpan data ke Cloud");
-          }
-        }
-
-        simpanBtn.innerHTML = originalText;
-        simpanBtn.disabled = false;
+        element.classList.add("bg-slate-800", "text-white", "active");
+        currentFilter = filterName;
+        window.renderDataList();
       };
 
-      // ================= UPDATE TAMPILAN DOM =================
-      function updateUI() {
-        renderBeranda();
-        if (window.renderDataList) window.renderDataList();
-      }
+      window.renderDataList = function () {
+        document.getElementById("stat-total").innerText = globalTeraData.length;
+        document.getElementById("stat-sah").innerText = globalTeraData.filter(
+          (d) => d.status === "Sah",
+        ).length;
 
-      function renderBeranda() {
-        const elStatTotal = document.getElementById("stat-total");
-        const elStatSah = document.getElementById("stat-sah");
-        if (elStatTotal) elStatTotal.innerText = globalTeraData.length;
-        if (elStatSah)
-          elStatSah.innerText = globalTeraData.filter(
-            (d) => d.status === "Sah",
-          ).length;
-
+        // Render Home Recent
         const recentContainer = document.getElementById("home-recent-list");
-        if (!recentContainer) return;
-        recentContainer.innerHTML = "";
-
         if (globalTeraData.length === 0) {
           recentContainer.innerHTML =
             '<div class="text-center py-6 text-slate-400 text-sm">Belum ada data pengujian.</div>';
-          return;
+        } else {
+          recentContainer.innerHTML = "";
+          globalTeraData.slice(0, 3).forEach((item) => {
+            const icon =
+              item.status === "Sah"
+                ? "ph-check-circle text-blue-500"
+                : "ph-x-circle text-red-500";
+            const bg = item.status === "Sah" ? "bg-blue-50" : "bg-red-50";
+            recentContainer.innerHTML += `
+              <div onclick="window.bukaDetail('${item.id}')" class="bg-white border border-slate-100 p-3 rounded-xl flex items-center gap-3 shadow-sm active-scale cursor-pointer">
+                  <div class="w-10 h-10 ${bg} rounded-full flex items-center justify-center flex-shrink-0"><i class="ph-fill ${icon} text-2xl"></i></div>
+                  <div class="flex-1 min-w-0">
+                      <h4 class="font-bold text-sm text-slate-800 truncate">${item.nama}</h4>
+                      <p class="text-xs text-slate-400 truncate">${item.jenis}</p>
+                  </div>
+                  <div class="text-right flex-shrink-0"><p class="text-xs font-bold text-slate-700">${item.tanggal}</p></div>
+              </div>`;
+          });
         }
 
-        // Tampilkan 3 data terbaru
-        globalTeraData.slice(0, 3).forEach((item) => {
-          const icon =
-            item.status === "Sah"
-              ? "ph-check-circle text-blue-500"
-              : "ph-x-circle text-red-500";
-          const bg = item.status === "Sah" ? "bg-blue-50" : "bg-red-50";
-          recentContainer.innerHTML += `
-            <div onclick="openDetail('${item.id}')" class="bg-white border border-slate-100 p-3 rounded-xl flex items-center gap-3 shadow-sm active-scale transition-all cursor-pointer">
-                <div class="w-10 h-10 ${bg} rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="ph-fill ${icon} text-2xl"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <h4 class="font-bold text-sm text-slate-800 truncate">${item.nama}</h4>
-                    <p class="text-xs text-slate-400 truncate">${item.jenis}</p>
-                </div>
-                <div class="text-right flex-shrink-0">
-                    <p class="text-xs font-bold text-slate-700">${item.tanggal}</p>
-                </div>
-            </div>`;
-        });
-      }
-
-      window.renderDataList = function () {
+        // Render Data Tab
         const container = document.getElementById("data-list-container");
-        const searchInput = document.getElementById("search-input");
-        if (!container) return;
-
-        const searchQuery = searchInput ? searchInput.value.toLowerCase() : "";
-        container.innerHTML = "";
-
+        const searchQuery = (
+          document.getElementById("search-input").value || ""
+        ).toLowerCase();
         let filteredData = globalTeraData;
-        if (currentFilter !== "Semua") {
-          filteredData = filteredData.filter(
-            (item) => item.status === currentFilter,
+
+        if (currentFilter !== "Semua")
+          filteredData = filteredData.filter((i) => i.status === currentFilter);
+        if (searchQuery)
+          filteredData = filteredData.filter((i) =>
+            i.nama.toLowerCase().includes(searchQuery),
           );
-        }
-        if (searchQuery) {
-          filteredData = filteredData.filter((item) =>
-            item.nama.toLowerCase().includes(searchQuery),
-          );
-        }
 
         if (filteredData.length === 0) {
           container.innerHTML = `
@@ -1382,19 +1046,20 @@
           return;
         }
 
+        container.innerHTML = "";
         filteredData.forEach((item) => {
-          const isSah = item.status === "Sah";
-          const badgeClass = isSah
-            ? "bg-blue-100 text-blue-700"
-            : "bg-red-100 text-red-700";
+          const badge =
+            item.status === "Sah"
+              ? "bg-blue-100 text-blue-700"
+              : "bg-red-100 text-red-700";
           container.innerHTML += `
-            <div onclick="openDetail('${item.id}')" class="bg-white border border-slate-100 p-4 rounded-xl shadow-sm active-scale transition-all cursor-pointer">
+            <div onclick="window.bukaDetail('${item.id}')" class="bg-white border border-slate-100 p-4 rounded-xl shadow-sm active-scale cursor-pointer">
                 <div class="flex justify-between items-start mb-2">
                     <div class="flex-1 min-w-0 pr-3">
                         <h4 class="font-bold text-sm text-slate-800 truncate">${item.nama}</h4>
                         <p class="text-[11px] text-slate-400 mt-0.5 truncate"><i class="ph-fill ph-map-pin"></i> ${item.alamat}</p>
                     </div>
-                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeClass} flex-shrink-0">${item.status}</span>
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${badge} flex-shrink-0">${item.status}</span>
                 </div>
                 <div class="flex justify-between items-end mt-3 pt-3 border-t border-slate-50">
                     <div>
@@ -1409,10 +1074,177 @@
             </div>`;
         });
       };
+    </script>
 
-      // Inisialisasi awal saat halaman dimuat
-      window.loadProfile();
-      initAuth();
+    <!-- ================= FIREBASE MODULE ================= -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        onSnapshot,
+        deleteDoc,
+        doc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // KONFIGURASI FIREBASE ASLI ANDA
+      const firebaseConfig = {
+        apiKey: "AIzaSyAHj8wfsq2t_-H-nE0WsurNL-R_CN2Br9w",
+        authDomain: "aplikasi-tera-perindag.firebaseapp.com",
+        projectId: "aplikasi-tera-perindag",
+        storageBucket: "aplikasi-tera-perindag.firebasestorage.app",
+        messagingSenderId: "976799307229",
+        appId: "1:976799307229:web:bc4ea6059b5e62ef445234",
+        measurementId: "G-REJG96XN7K",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // FUNGSI SIMPAN DATA (Tahan Banting Kodular)
+      window.prosesSimpan = async function () {
+        const nama = document.getElementById("input-nama").value.trim();
+        const jenis = document.getElementById("input-jenis").value;
+        const btnSimpan = document.getElementById("btn-simpan");
+
+        // 1. Validasi Manual (Tanpa <form> default)
+        if (!nama || !jenis) {
+          window.tampilkanPesan("Nama Pemilik dan Jenis Alat Wajib Diisi!");
+          return;
+        }
+
+        // 2. Loading State
+        const originalText = btnSimpan.innerHTML;
+        btnSimpan.innerHTML =
+          '<i class="ph-bold ph-spinner animate-spin"></i> Menyimpan...';
+        btnSimpan.disabled = true;
+
+        const radioStatus = document.querySelector(
+          'input[name="status-tera"]:checked',
+        );
+        const newData = {
+          nama: nama,
+          alamat: document.getElementById("input-alamat").value || "-",
+          gps: document.getElementById("input-gps").value || "-",
+          jenis: jenis,
+          merek: document.getElementById("input-merek").value || "-",
+          kapasitas: document.getElementById("input-kapasitas").value || "-",
+          retribusi:
+            parseInt(document.getElementById("input-retribusi").value) || 0,
+          status: radioStatus ? radioStatus.value : "Sah",
+          tanggal: new Date().toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+          timestamp: Date.now(),
+        };
+
+        try {
+          // 3. Paksa Login Anonim sebelum simpan (Solusi Bug DOM Storage Kodular)
+          const userCredential = await signInAnonymously(auth);
+          const uid = userCredential.user.uid;
+
+          // 4. Kirim ke Firebase
+          const dataRef = collection(
+            db,
+            "artifacts",
+            appId,
+            "users",
+            uid,
+            "tera_data",
+          );
+          await addDoc(dataRef, newData);
+
+          window.tampilkanPesan("Berhasil Disimpan!");
+
+          // 5. Reset Form & Pindah Tab
+          document.getElementById("input-nama").value = "";
+          document.getElementById("input-alamat").value = "";
+          document.getElementById("input-gps").value = "";
+          document.getElementById("input-jenis").value = "";
+          document.getElementById("input-merek").value = "";
+          document.getElementById("input-kapasitas").value = "";
+          document.getElementById("input-retribusi").value = "0";
+          window.switchTab("data");
+        } catch (error) {
+          console.error(error);
+          window.tampilkanPesan("Gagal: " + error.message);
+        } finally {
+          btnSimpan.innerHTML = originalText;
+          btnSimpan.disabled = false;
+        }
+      };
+
+      // FUNGSI BACA DATA REALTIME
+      window.mulaiBacaDatabase = async function () {
+        try {
+          const userCredential = await signInAnonymously(auth);
+          const uid = userCredential.user.uid;
+          document.getElementById("status-db").innerText = "Terhubung (Online)";
+
+          const dataRef = collection(
+            db,
+            "artifacts",
+            appId,
+            "users",
+            uid,
+            "tera_data",
+          );
+          onSnapshot(dataRef, (snapshot) => {
+            globalTeraData = [];
+            snapshot.forEach((doc) => {
+              globalTeraData.push({ id: doc.id, ...doc.data() });
+            });
+            globalTeraData.sort((a, b) => b.timestamp - a.timestamp);
+            window.renderDataList();
+          });
+        } catch (error) {
+          document.getElementById("status-db").innerText =
+            "Koneksi Gagal / Terputus";
+          document.getElementById("status-db").className =
+            "text-xs text-red-500 font-medium";
+          document.getElementById("home-recent-list").innerHTML =
+            '<div class="text-center py-6 text-red-400 text-sm">Gagal terhubung ke server. Periksa internet Anda.</div>';
+          console.error("Gagal terhubung Firebase:", error);
+        }
+      };
+
+      // FUNGSI HAPUS DATA
+      window.hapusDataFirebase = async function () {
+        if (!currentDetailId) return;
+        try {
+          const userCredential = await signInAnonymously(auth);
+          const uid = userCredential.user.uid;
+
+          const docRef = doc(
+            db,
+            "artifacts",
+            appId,
+            "users",
+            uid,
+            "tera_data",
+            currentDetailId,
+          );
+          await deleteDoc(docRef);
+
+          window.tutupModal("modal-confirm");
+          window.tutupModal("modal-detail");
+          window.tampilkanPesan("Data berhasil dihapus");
+        } catch (error) {
+          window.tampilkanPesan("Gagal menghapus data");
+          console.error(error);
+        }
+      };
+
+      // Inisialisasi otomatis saat script termuat
+      window.mulaiBacaDatabase();
     </script>
   </body>
 </html>
